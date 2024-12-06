@@ -38,5 +38,8 @@ lines(density(sum_alpha_hat), col = "blue")
 mean_est <- mean(sum_alpha_hat)
 var_est <- var(sum_alpha_hat)
 
+#mean_est = 6.00846116427962
 mean_est
+#var_est = 5.34673303837007
 var_est
+

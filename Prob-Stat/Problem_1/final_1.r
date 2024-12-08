@@ -18,13 +18,13 @@ sum_alpha_hat <- numeric(num_sim)
 
 for (sim in 1:num_sim) {
   # Generate random errors
-  epsilon <- rnorm(n, mean = 0, sd = sigma_epsilon)
+  epsilon <- rnorm(n, mean = 0, sd = 4)
   
   # Generate Y values
   Y <- alpha1 + alpha2 * x + alpha3 * x^2 + alpha4 * log(x) + epsilon
   
   # Fit the model
-  fit <- lm(Y ~ x + I(x^2) + log(x))
+  fit <- lm(Y ~ x + I(x^2) + I(log(x)))
   
   # Sum of coefficients
   sum_alpha_hat[sim] <- sum(coef(fit))
@@ -40,6 +40,6 @@ var_est <- var(sum_alpha_hat)
 
 #mean_est = 6.00846116427962
 mean_est
-#var_est = 5.34673303837007
+#var_est = 21.3869
 var_est
 

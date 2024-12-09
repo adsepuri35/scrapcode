@@ -33,4 +33,4 @@ deviations <- replicate(trials, {
 prob <- mean(abs(deviations) > epsilon)
 cat("P(|Z| > epsilon):", prob, "\n")
 
-# P(|Z| > epsilon): 5e-04
+# P(|Z| > epsilon): 2e-04

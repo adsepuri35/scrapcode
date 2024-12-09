@@ -1,25 +1,20 @@
-# Parameters
-lambda <- 1/3  # Rate parameter
-time_limit <- 10  # Time limit in months
-simulations <- 10^5  # Number of simulations
+#lambda <- 1/3
+t_lim <- 10
 
-# Function to simulate number of crashes within 10 months
+# sim crashes in 10 mos
 simulate_crashes <- function() {
-  # Generate inter-arrival times for 1000 crashes
-  inter_arrival_times <- rexp(1000, rate = lambda)
+  iat <- rexp(1000, rate = 1/3)
   
   # Compute cumulative times of crashes
-  cumulative_times <- cumsum(inter_arrival_times)
+  c_t <- cumsum(iat)
   
   # Count how many crashes occur within the time limit
-  sum(cumulative_times < time_limit)
+  sum(c_t < t_lim)
 }
-
-# Perform simulations
-results <- replicate(simulations, simulate_crashes())
+res <- replicate(10^5, simulate_crashes())
 
 # Approximate expected number of crashes
-expected_crashes <- mean(results)
+expected_crashes <- mean(res)
 cat("Simulated expected number of crashes in 10 months:", expected_crashes, "\n")
 
 # Simulated expected number of crashes in 10 months: 3.33035 

@@ -35,7 +35,6 @@ cat("Variance of X:", var_X, "\n")
 # Test the hypothesis by changing the dimension n
 dimensions <- c(50, 100, 200, 500)
 variances <- numeric(length(dimensions))
-
 for (i in seq_along(dimensions)) {
   n <- dimensions[i]
   

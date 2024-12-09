@@ -39,7 +39,7 @@ mean_est <- mean(sum_alpha_hat)
 var_est <- var(sum_alpha_hat)
 
 #mean_est = 6.00846116427962
-mean_est
+print(mean_est)
 #var_est = 21.3869
-var_est
+print(var_est)
 

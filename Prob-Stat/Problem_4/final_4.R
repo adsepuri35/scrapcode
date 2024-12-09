@@ -54,3 +54,14 @@ t_crit <- qt(0.975, df = length(Y) - (final_d + 1))
 ci_lower <- alpha1_hat - t_crit * se_alpha1
 ci_upper <- alpha1_hat + t_crit * se_alpha1
 cat("95% Confidence Interval for alpha_1: [", ci_lower, ",", ci_upper, "]\n")
+
+# d = 1 , Leading coefficient = 497.9961 
+# d = 2 , Leading coefficient = 472.3821 
+# d = 3 , Leading coefficient = 3.186787 
+# d = 4 , Leading coefficient = 1.000013 
+# d = 5 , Leading coefficient = -2.161833e-06 
+# d = 6 , Leading coefficient = 8.188894e-08 
+# Optimal value of d found: 6 
+# Estimate of alpha_1 = 3.6426 
+# P-value for H0: alpha_1 = 0: 0.03633237 
+# 95% Confidence Interval for alpha_1: [ 0.2368448 , 7.048355 ]

@@ -1,16 +1,10 @@
-# Parameters
-n <- 10^4
-delta <- 0.2
-epsilon <- 0.2
-trials <- 10^4
+n <- 100000
 
-# Function to calculate the logarithmic integral Li(n)
 log_integral <- function(n) {
   integrate(function(x) 1 / log(x), lower = 2, upper = n)$value
 }
 
-# Generate Bernoulli random variables for X_k
-generate_pi <- function(n) {
+g_p <- function(n) {
   X <- numeric(n)
   X[1] <- 0
   X[2] <- 1
@@ -19,18 +13,12 @@ generate_pi <- function(n) {
   }
   sum(X)
 }
-
-# Calculate Li(n)
-Li_n <- log_integral(n)
-
-# Perform simulations
-deviations <- replicate(trials, {
-  pi_n <- generate_pi(n)
-  (pi_n - Li_n) / (n^(0.5 + delta))
+dev <- replicate(10^4, {
+  pi_n <- g_p(n)
+  (pi_n - log_integral(n)) / (n^(0.5 + 0.2))
 })
 
-# Calculate probability |Z| > epsilon
-prob <- mean(abs(deviations) > epsilon)
-cat("P(|Z| > epsilon):", prob, "\n")
+prob <- mean(abs(dev) > epsilon)
+cat(prob)
 
-# P(|Z| > epsilon): 2e-04
+# P(|Z| > epsilon): 1e-04

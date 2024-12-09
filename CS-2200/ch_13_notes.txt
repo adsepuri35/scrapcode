@@ -1,0 +1,17 @@
+Application Layer:
+Supports network-based applications. Ex: instant messager, multi-player video games. Protocols include HTTP for web apps, SMTP for email, and FTP for file transfer. Allow application level entities (clients, servers, peers) to communicate.
+
+Transport Layer:
+Takes application layer message and ferries it between ends of communication. Includes breaking messages into packets. Protocols include TCP and UDP.
+TCP - reliable in-order delivery. connection-oriented. Connection established between two endpoints that is taken down after the data is transmitted.
+UDP - like sending postcard in U.S. mail. Messages have strict boundaries. Does not involve connection establishment. Messages can arrive out of order.
+
+Network Layer:
+Handles routing. Like the postal service. Drop the mail in the bin and it gets to the destination by way of USPS.
+Internet Protocol (IP) - packet formatting and determines route path should take to get to destination.
+
+Link Layer:
+Ferries IP packets between nodes on the Internet through which a packet has to routed from source to destination. Ex: ethernet. IP packet might be broken up into fragments.
+
+Physical Layer:
+Physically/electrically moves bits of packet from one node to the next.

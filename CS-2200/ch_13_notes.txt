@@ -4,7 +4,8 @@ Supports network-based applications. Ex: instant messager, multi-player video ga
 Transport Layer:
 Takes application layer message and ferries it between ends of communication. Includes breaking messages into packets. Protocols include TCP and UDP.
 TCP - reliable in-order delivery. connection-oriented. Connection established between two endpoints that is taken down after the data is transmitted.
-UDP - like sending postcard in U.S. mail. Messages have strict boundaries. Does not involve connection establishment. Messages can arrive out of order.
+UDP - like sending postcard in U.S. mail. Messages have strict boundaries. Does not involve connection establishment. Messages can arrive out of order. Doesn't use ACKs.
+Provides API that provides calls to send and receive data on network.
 
 Network Layer:
 Handles routing. Like the postal service. Drop the mail in the bin and it gets to the destination by way of USPS.
@@ -15,3 +16,31 @@ Ferries IP packets between nodes on the Internet through which a packet has to r
 
 Physical Layer:
 Physically/electrically moves bits of packet from one node to the next.
+
+Positive acknowledgement - mechanism to confirm receipt of data packets. 
+
+Round Trip Time (RTT) - time taken for a small message to be sent from sender to receiver and back to sender. Used to estimate delay. Timeout period should be longer than the RTT.
+
+Stop and Wait Protocols:
+1. Sender sends packet and waits for ACK.
+2. When packet is received, receipient generates ACK with sequence number (unique id for respective packet).
+3. Sender waits for time period called timeout. If no ACK is heard, it re-transmits the packets.
+
+Problem with stop-and-wait -> too much dead time.
+
+Pipelining with no-acks is unrealistic. So we can send packets in windows of a predetermined size.
+
+Window size restricts sender's rate and prevents queue buildup in routers.
+
+You can use cumulative ACKs to reduce overhead of network transmission.
+
+Checksum is computed based on the contents of the packets. The destination computes the same checksum and compares it to the packet's checksum to catch erroneous packets.
+
+TCP:
+Connection-oriented. Deals with streams of bytes. Full duplex connection - both sides can send and receive data simultaneously.
+To set up connection: Client sends server a connection request message with info about packet sequence number. Server then sends an ACK with its sequence number for its packets. Client then allocates resources, packet buffers, timers, etc. and sends an ACK. When the server receieves the ACK, it allocates resources for the connection: packet buffers, timers, etc.
+Sender dynamically adjusts window size to avoid queue buildup in routers and reduce network congestion. 
+Teardown - client sends connection teardown request. Server sends ACK. Server sends its own teardown request. Client sends ACK and deallocates client-side resources. Once client's ACK is received, Server deallocates server-side resources.
+
+UDP:
+Sits atop IP. Used by apps that can function with lesser guarantees since it is faster. Often used for lower-latency applications. Getting the packets to the destination is more important than losing some packets. Cons: Out of order messages, message loss, no self-control.

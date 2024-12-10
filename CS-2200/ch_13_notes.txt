@@ -44,3 +44,105 @@ Teardown - client sends connection teardown request. Server sends ACK. Server se
 
 UDP:
 Sits atop IP. Used by apps that can function with lesser guarantees since it is faster. Often used for lower-latency applications. Getting the packets to the destination is more important than losing some packets. Cons: Out of order messages, message loss, no self-control.
+
+Network Layer 2: 
+Intermediate nodes forward packets toward final destination. Routes are not fixed. Separation of responsibility to determine routing. Maintains routing table that contains a routhe from source to desired destination.
+Functionalities needed:
+Routing algorithms - determine routes.
+Service model - switching function that takes incoming packet and sends to appropriate outgoing link.
+
+Routing algos:
+Cost can depend on connection bandwidth or other factors. In dijkstra's each node has complete info about the state of the network (connectivity + costs).
+Distance Vector - async and works with partial network knowledge. Viable for internet. Each node maintains a distance vector table. Has lowest cost route of sending a packett to every destination in a network through immediate neighbours.
+
+Autonomous Systems - regions on Internet that contain rotuers. Routers can run LS or DV. Gateway routers communicate with destinations outside AS. Gateway routers communicate using BGP - Border Gateway Protocol
+
+Routers have multiple NICs, one for each of the connections it supports. Routers only contain bottom 3 layers of the protocol stack while hosts contain all 5.
+
+IP addresses:
+Multipart nature of IP addresses support heirarchical addressing of internet networks. IPv4 are 32 bits. Every interface has a unique IP address. The address is divided into 4 8-bit quantities. Dotted decimal notation - each part is the decimal equivalent of the 8 bit pattern that represents that part.
+
+IP network - some number of the most significant bits of the IP address. Ex: top 24 bits are to name IP network and bottom 8 bits name specific device.
+
+Common notation: x.y.z.0/n -> n = number of bits reserved for network part of IP address.
+
+Packet switching - when a packet arrives at a switch, the switch examines the packet destination and send its along the appropriate outgoing link.
+
+Routing and forwarding happen in the network layer. Network layer has a forwarding table that containst the next hop IP address given a destination IP address.
+
+Link layer acquires physical medium for transmission. Deals with frames instead of packets. A network layer packet may require several frames.
+
+Ethernet:
+Ethernet cable is like a bus. Ethernet connects arbitrary number of units together.
+
+Carrier sense multiple access/collision detect (CSMA/CD): 
+1. Station wanting to transmit sense the medium. Station waits until medium is idle and then starts its transmission.
+2. After starting a transmission, each station listens for a collision. 
+3. When detected, the station aborts transmission and sends noise burst to warn other stations a collision has occurred. The station waits for a random amount of time before repeating the cycle.
+
+Collision domain - set of computers that can hear the transmissions of one another
+
+CSMA/CA - (CA = collision avoidance). Wireless networks. Source gets permission to send by sending a Request to Send (RTS) control packet on the medium to the desired location. The destination responds with a Clear to Send (CTS) control packet. When the source receives the CTS, it send the frame to the destination. RTS packets from different nodes may collide, but the packets are small so its not really a problem. All nodes in a LAN hear the RTS and CTS packets.
+
+Token ring - essentially polling each node. Can be slow for LANs with lots of hosts. Works well under heavy load conditions.
+
+Repeater - boosts signal strength
+Hub - connects computers to form 1 collision domain. Layer 1 link
+Bridge - connects indepedent collision domains, isolating them. 2-4 ports. Layer 2
+Switch - similar functionality to bridge but supports 4-32 ports. Layer 2
+Router - switch with capabilities to route message from LAN to internet. Layer 3
+VLAN - Virtual LAN. Groups physically distributed computers and computers connected to different swticehs to form LAN. Make higher-level network services possible. Layer 2
+
+Packet header - metadata that includes sequence number to enable scatter/gather functionality of transport layer.
+
+Message Transmission Time:
+1. Processing delay at Sender (S): Cumuluative time spent at the ender in the various layers of the protocol stack. Includes:
+    - transport level functions (scattering message into packetts, appending header to each packet, affixing checksum to each packet)
+    - network level functions ex: looking up packet's route
+    - link layer function - media access + framing data for sending on physical medium
+    - physical layer functions
+2. Transmission delay (T_w) - time needed to put bits on wire at sending end. connectivity of computer to physical medium matters.
+Transmission delay = message size / network bandwidth
+3. Time of flight (T_f):
+    - propagation delay - time for bits to travel on wire from point a to b. One factor = distance. Several physical links between destination.
+    - queuing delay - delays in switches. add to latency.
+4. Processing delay at receiver - mirror image of processing delay incurred by sender. Delay due to physical, link, network, and transport layers.
+
+Total time for message transmission = end-to-end latency = S + T_w + T_f + R
+
+Throughput = message size / end-to-end latency
+
+Transmission delay = message size / network bandwidth
+
+Ex 10: 1 + (1000 / 1,000,000 secs = 1 ms) + 7 + 1 = 10 ms = end-to-end latency
+Throughput = 1000 bits / 10 ms = 100 bits/ms -> 100,000 bits/sec
+
+Ex 11: Packet size = header size + payload -> 20,000 = 1000 + payload
+payload = 19,000 bits
+# of packets needed to send the message = 1,900,000 / 19,000 = 100 packets
+With 10% packet loss -> 111
+Send 100 -> 90 received
+Send 10 -> 9 received
+Send 1 -> 1 received
+= 100
+
+Ex 12:
+Packet payload = 19,000 bits
+# of packets to send message = 100
+Transmission delay for each packet = packet size / wire bandwith = 20K / 400K = 0.05 s
+Source side latency per packet = 0.05 secs.
+End to end latency = 2.05 s
+Destination side overhead for generating ACK packet = 0
+End to end latency for ACK packet = 0 + 0 + 2 + 0 = 2 secs
+ACK packet received 4 secs after it is placed on wire
+Duty cycle = 4.05 s 
+100 packets = 10 duty cycles = 40.5 s
+Remaining 9 packets -> 9 * 0.05 s = 0.45 s
+Time to accomplish delivery = 40.95 s
+
+
+
+
+
+
+

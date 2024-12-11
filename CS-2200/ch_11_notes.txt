@@ -1,0 +1,22 @@
+Metadata - space overhead
+
+Attributes for files:
+    - names: unique with respect to previous parts of name. Directories are also files - contain info about files in next level of subtree.
+        - aliases - if we delete a file with an alias, we can use the alias to still access the contents of the file
+        - soft link - creating an alias with a name that points to the structure itself, so if the structure is deleted, you can't access it.
+    - access rights - include read, write, execute, change ownership, change privileges.
+
+Contiguous Allocation - file system pre-allocates fixed amount of space to file. Amount of space allocated depends on type of file. File system maintains a free list of available disk blocks. Suffers from external fragementation.
+
+Contiguous Allocation - same as previous but file system sets aside an overflow region that allows for spillover of large files that don't fit within the fixed partition.
+
+Linked Allocation - file system maintains a free list. Head of free list cached in memory. Expensive traversal times -> alternative is bit vector. Block free if 0, busy if 1. No external fragementation. Poor file access times because you need to retrieve block pointers.
+
+File Allocation Table (FAT) - table on disk. Contains linked list of files currentyl populating the disk. free/busy field + next field. Next field gives the next disk of the block of the linked list that represents a file. A -1 indicates the last disk block for that file. Efficeient allocation. Downside is logical partitioning of disk.
+
+Indexed Allocation - Scheme allocated index disk block for each file: fixed-size data structure that contains address for data blocks that are part of that file. One table per file for all data block pointers. Index node or i-node occupies a disk block. Free list = bit vector. Performs better for random access. Limitation = max size of file
+
+Hybrid Indexed Allocation - Every file has an i-node. heirarchical structure.
+
+Type field - identifies if i-node is directory or data file
+Reference count - number of files pointing to i-node

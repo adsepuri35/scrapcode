@@ -36,6 +36,7 @@ b = # of bytes per sector
 Time for one revolution = 60/r seconds
 Amount of data read in 1 revolution = s * b bytes
 data transfer rate = (s * b * r) / (60 bytes/second)
+data transfer rate = (Amount of data in track) / (time for 1 rev)
 
 Rotational latency = 60/r seconds
 Average rotational latency = (60 / (r * 2)) seconds
@@ -52,3 +53,22 @@ Shortest Seek Time First - minimized head movement + avg wait time, can starve r
 Scan - low variance in wait time, avg wait time like SSTF. Avoids starvation but upper bound is travsersal time of head from one end to the other
 C-Scan - Removes bias for requests around middle tracks of disk. Lower varince than SCAN.
 LOOK - doesn't unnecessarilt travese to end of disk. Head stops at last serviced requests.
+
+Time to access random block on disk = seek time + avg rotational latency
+rotational latency = 0.0075 s
+avg rotational latency = 0.0075 / 2 = 0.00375
+6.5 + 3.75 = 10.25 ms
+
+Read 1 sector = 6ms / 198
+Random read = access sector + read sector = 10.25 + (6ms / 198) 
+# random reads per second = 1 / (10.25 + (0.006 / 198)) = 97.2/s
+
+HW 11
+1.1 256 * 256 * 64 * 2 * 6 = 50331648
+1.2 (64 * 256) / (60 / 7200) = 1966080
+
+One advantage of DMA over Programmed I/O:
+- In Programmed I/O, processor is heavily involved in data transfer between devices and memory
+- DMA controllers handle data transfer independently, without processor intervention.
+
+Cycle stealing - when DMA controller takes control of system bus, suspending CPU activity. Not a porblem since the processor mostly work out of the cache

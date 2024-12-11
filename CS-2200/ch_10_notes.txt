@@ -1,0 +1,54 @@
+Device controller:
+2 registers - data + status
+
+Ready - is data in data register new?
+Interrupt Enable (IE) - is processor allowing device to interrupt it?
+Interrupt Flag - Is the controller ready to interrupt the processor?
+
+We can reserve high addresses in memory for I/O device registers.
+
+Programmed data transfer - accomplished using polling or interrupts. Work for slow speed devices that produce data asynchronously. High speed devices (ex. disks) produce data synchronously.
+
+DMA (Direct Memory Access) - device controller transfers data between itself and memory without processor intervention.
+
+I/O Processors - decouple I/O chores from main processor so the main processor experiences less interruptions
+
+Device Driver - part of OS, controls each device in computer system. converts OS requests into a language hardware can understand. Manages data exchange between OS and devices.
+
+Disk drives:
+Total capacity = (p * n * t * s * b) bytes
+p = # of platters
+n = # of surfaces per platter (1 or 2)
+t = # of tracks per surface
+s = # of sectors per track
+b = # of bytes per sector
+
+W/ zoned recording:
+z = # of zones
+t_zi = # of tracks at zone z_i
+s_zi = # of sectors per track at zone z_i
+Capacity = (p * n * (sum(t_zi * s_zi)) * b) for 1 <= i <= z bytes
+
+Data transfer rate:
+r = rotational speed of disk (RPM)
+s = # of sectors per track
+b = # of bytes per sector
+Time for one revolution = 60/r seconds
+Amount of data read in 1 revolution = s * b bytes
+data transfer rate = (s * b * r) / (60 bytes/second)
+
+Rotational latency = 60/r seconds
+Average rotational latency = (60 / (r * 2)) seconds
+Sector read time = rotational latency / (# of sectors per track) = (60 / (r * s)) seconds
+
+a = average seek time (seconds)
+Time to read random sector in disk = a + (60 / (r * 2)) + (60 / (r * s)) seconds
+
+Disk-Scheduling Algorithms:
+Typical measures - avg waiting time for request, variance in wait time, overall throughput
+
+FCFS - least variance, poor throughput
+Shortest Seek Time First - minimized head movement + avg wait time, can starve request. High variance
+Scan - low variance in wait time, avg wait time like SSTF. Avoids starvation but upper bound is travsersal time of head from one end to the other
+C-Scan - Removes bias for requests around middle tracks of disk. Lower varince than SCAN.
+LOOK - doesn't unnecessarilt travese to end of disk. Head stops at last serviced requests.

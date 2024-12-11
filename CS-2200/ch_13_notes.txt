@@ -140,9 +140,13 @@ Duty cycle = 4.05 s
 Remaining 9 packets -> 9 * 0.05 s = 0.45 s
 Time to accomplish delivery = 40.95 s
 
+IPv6 addresses are 128 bits
 
-
-
-
-
+Study: 
+Review the specific role of MAC addresses in local network communication
+Practice explaining the difference between frames (Link Layer) and packets (Network Layer)
+Review TCP's specific reliability features like sequence numbers and flow control
+Review routing table terminology and principles, especially the longest prefix match concept
+Strengthen knowledge of specific problems like count-to-infinity in Distance Vector routing
+    - No problem! Let me help explain: Link State routing converges faster because each router has complete information about the network topology. It's like having a full map versus only knowing what your neighbors tell you. When a change occurs, routers can quickly recalculate routes using their complete map.
 

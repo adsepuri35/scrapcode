@@ -20,3 +20,21 @@ Hybrid Indexed Allocation - Every file has an i-node. heirarchical structure.
 
 Type field - identifies if i-node is directory or data file
 Reference count - number of files pointing to i-node
+
+3.1 
+# of single or double indirect pointers in index block = 1024/8 = 128
+2 + 128 + 128*128 = 16514 blocks
+16514 * 4096 = 67641344
+
+3.2
+(5 * 10^6) / (4096) = 1221
+
+3.3 
+2 direct
+1 single indirect = 128
+1 double indirect -> 9 i-nodes
+12 index blocks
+
+
+total = 100 * 8 + 77 + 84 = 961
+score = 96+91+100+100+99+74+100+92+100+76 = 928

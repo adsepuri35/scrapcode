@@ -1,0 +1,23 @@
+Leetcode 146 - LRU Cache:
+    - Use doubly linked list with empty head and tail pointers
+    - define class Node for doubly linked list node
+    - unordered map to keep track of nodes
+    - keep track of cache size with map size
+    - helper add, delete functions
+
+Leetcode 3 - Longest Substring Without Repeating Characters
+    - Have unordered map to keep track of last occurrence of each Characters
+    - Have left and right pointers
+    - Update left pointer if there are duplicates in the current window and the last occurrence of the current character is within the current window. So we don't go backwards
+
+Leetcode 3371 - Identify the Largest Outlier in an Array
+    - Intuition - essentially, if we take the sum of all the special numbers. If we add one of the outliers to the sum, it will double. If we subtract an outlier, the remaining sum should be 2 times the other special number, which we should see in the map
+    - we can have a sum = 0
+    - Pass 1 - sum up all of the integers and add to the freq of the current num * 2
+
+Leetcode 49 - Group Anagrams
+    - Approach 1 - essentially sort the strings by characters and add to a hashmap. Time = O(NKlogK), Space = O(NK)
+    - Approach 2 - use a 26 char array to keep track of char frequencies, construct a string and separate frequencies, add to hashmap. Time = Space = O(NK)
+
+General Notes:
+    - Pay closer attention to base/edge cases

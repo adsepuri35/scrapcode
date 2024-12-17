@@ -51,5 +51,112 @@ Leetcode 1152 - Analyze User Website Visit Pattern
     - Time Complexity - O(U * K^3)
     - Space Complexity - O(U * W)
 
+Leetcode 227 - Basic Calculator II
+    - Approach 1 - use a stack. Problem is O(n) complexity
+    - Approach 2 - Keep track of a current number, answer, last sign, and the last number. Check if the current character is a digit. If so, add to current num, otherwise, check the last sign, if the last sign is + or -, add the last number to the answer and update it to the current num. If not, either multiply the lastNum or divide it by currNum. Update sign too.
+
+AMZN Leadership Principles:
+    - Customer Obsession - Start with customers and work backwards. Work vigorously to keep customer trust.
+    - Ownership - Leaders are owners. Think long-term. Act on behalf of the company.
+    - Invent & Simplify - Externally aware and look for new ideas everywhere. 
+    - Learn and Be Curious - Never stop learning
+    - Hire & Develop the Best - Recognize exceptional talent. 
+    - Insist on the Highest Standards - Raising the bar and delivering high quality products.
+    - Think Big - Think differently and look around corners to better serve customers.
+    - Bias for Action - Speed matters. Calculated risk-taking is valued
+    - Frugality - Accomplish more with less.
+    - Earn Trust - Listen attentively and treat other respectfully.
+    - Dive Deep - stay connected to details. Be skeptical.
+    - Have Backbone; Disagree and Commit - Challenge decisions. Have conviction and be tenacious.
+    - Deliver Results - deliver high quality results on time.
+
+Leetcode 215. Kth Largest Element in an Array
+    - Find the minimum and maximum value in the array. Create a new array the size of the difference between the min and max. Count the frequencies of the numbers. Then start from the end of the array and find the kth largest element.
+
+Leetcode 3366 - Minimize Array Sum:
+
+int minimizeSum(vector<int>& nums, int k, int op1, int op2) {
+    int n = nums.size();
+    vector<pair<int, int>> op1Impact, op2Impact;
+
+    // Calculate the impact of Operation 1 and Operation 2 for each index
+    for (int i = 0; i < n; i++) {
+        int op1Result = (nums[i] + 1) / 2; // Operation 1 result: divide and round up
+        int op2Result = (nums[i] >= k) ? nums[i] - k : nums[i]; // Operation 2 result: subtract k if possible
+        
+        op1Impact.push_back({nums[i] - op1Result, i}); // Impact = reduction by Operation 1
+        op2Impact.push_back({nums[i] - op2Result, i}); // Impact = reduction by Operation 2
+    }
+
+    // Sort based on reduction impact (larger reductions come first)
+    sort(op1Impact.rbegin(), op1Impact.rend()); // Sort descending
+    sort(op2Impact.rbegin(), op2Impact.rend());
+
+    // Keep track of which indices have been used for operations
+    vector<bool> usedOp1(n, false), usedOp2(n, false);
+
+    // Apply Operation 1 to the top 'op1' indices
+    for (int i = 0; i < op1 && i < op1Impact.size(); i++) {
+        int idx = op1Impact[i].second;
+        nums[idx] = (nums[idx] + 1) / 2;
+        usedOp1[idx] = true;
+    }
+
+    // Apply Operation 2 to the top 'op2' indices (avoid already modified indices)
+    for (int i = 0; i < op2 && i < op2Impact.size(); i++) {
+        int idx = op2Impact[i].second;
+        if (nums[idx] >= k && !usedOp2[idx]) { // Check conditions
+            nums[idx] -= k;
+            usedOp2[idx] = true;
+        }
+    }
+
+    // Compute the resulting sum
+    int totalSum = 0;
+    for (int num : nums) {
+        totalSum += num;
+    }
+    return totalSum;
+}
+
+Leetcode 207 - Course Schedule:
+
+bool dfs(int node, vector<vector<int>>& adj, vector<bool>& visit, vector<bool>& inStack) {
+    // If the node is already in the stack, we have a cycle.
+    if (inStack[node]) {
+        return true;
+    }
+    if (visit[node]) {
+        return false;
+    }
+    // Mark the current node as visited and part of current recursion stack.
+    visit[node] = true;
+    inStack[node] = true;
+    for (auto neighbor : adj[node]) {
+        if (dfs(neighbor, adj, visit, inStack)) {
+            return true;
+        }
+    }
+    // Remove the node from the stack.
+    inStack[node] = false;
+    return false;
+}
+
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> adj(numCourses);
+    for (auto prerequisite : prerequisites) {
+        adj[prerequisite[1]].push_back(prerequisite[0]);
+    }
+
+    vector<bool> visit(numCourses);
+    vector<bool> inStack(numCourses);
+    for (int i = 0; i < numCourses; i++) {
+        if (dfs(i, adj, visit, inStack)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 General Notes:
     - Pay closer attention to base/edge cases

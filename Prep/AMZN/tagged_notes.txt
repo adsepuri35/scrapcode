@@ -67,10 +67,10 @@ AMZN Leadership Principles:
     - Frugality - Accomplish more with less.
     - Earn Trust - Listen attentively and treat other respectfully.
     - Dive Deep - stay connected to details. Be skeptical.
-    - Have Backbone; Disagree and Commit - Challenge decisions. Have conviction and be tenacious.
+    - Have a Backbone; Disagree and Commit - Challenge decisions. Have conviction and be tenacious.
     - Deliver Results - deliver high quality results on time.
 
-Leetcode 215. Kth Largest Element in an Array
+Leetcode 215 - Kth Largest Element in an Array
     - Find the minimum and maximum value in the array. Create a new array the size of the difference between the min and max. Count the frequencies of the numbers. Then start from the end of the array and find the kth largest element.
 
 Leetcode 3366 - Minimize Array Sum:

@@ -1,0 +1,3 @@
+/mnt/d/Githhub Repos/scrapcode/cmake-test/out/build/CMakeFiles/CMAKE_TEST.dir
+/mnt/d/Githhub Repos/scrapcode/cmake-test/out/build/CMakeFiles/edit_cache.dir
+/mnt/d/Githhub Repos/scrapcode/cmake-test/out/build/CMakeFiles/rebuild_cache.dir

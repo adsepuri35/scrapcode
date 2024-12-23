@@ -1,0 +1,17 @@
+Chapter 1:
+
+Socket - zmq::socket_t - communication endpoint. 
+Types:
+    - REQ - client-side socket for request-response pattern
+    - REP (Reply) - server-side socket for request-response patterns
+    - PUB (Publish) - publish messages to subscribers
+    - SUB (Subscribe) - subscribes to published messages
+    - PUSH - send messages to workers
+    - PULL - receive messages from workers
+Socket operations:
+    - bind() - bind socket to address. Ex: "tcp://*:5555
+    - connect() - connects socket to remote address
+    - send() - send message
+    - receive() - receive a message
+
+Context - zmq::context_t - container for all ZeroMQ sockets. Manages underlying I/O threads and handles socket communication. Essentially a container for your ZeroMQ Application

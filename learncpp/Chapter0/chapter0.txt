@@ -1,0 +1,14 @@
+Chapter 0:
+
+0.2 - machine code is not compatible between CPU families. Assembler translate assembly programs into machine language. Assembly programs, like machine language, is not compatible between CPU families. Compiler reads source codde and translates to a lower level language (ex. assembly or machine language). The mahcine language files are combined into an executable file (containing machine language instructions) that can be run or distributed. Running executable files doesn't require the compiler to be installed. Interpreter is a program that directly executes instructions in the source code. Interpreters are usually more flexible than compilers but less efficient. This also means the interpreter has to be installed on every machine the program will be run on. High-level languages are designed with portability in mind.
+
+0.5 - 
+C++ compiler goes through each source code file in the program and checks syntax and translates code into machine language instructions. The instructions are stored in an intermediate file called an object file. The object file also includes info about linker and debugging.
+
+Linker kicks in after compiler. It combines object files are produces executable file (called linking). It ensures cross-file dependencies are resolved. The Linker can also capable linking library files. Library files are collections of precompiled code packaged for reuse. Most C++ linkers are configured to link in the standard library by default
+
+Compile CLI Command:
+g++ -o <name-of-output-file> <source file>.cpp
+
+0.9 -
+ 

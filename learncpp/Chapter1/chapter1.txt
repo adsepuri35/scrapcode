@@ -1,0 +1,77 @@
+Chapter 1:
+
+1.1
+Every C++ program must have a function called main.
+When the program is run, the statements in the main function are executed in sequential order.
+
+#include is a preprocessor directive.
+
+When an executable program finisehs, the program sens a value back to the OS to indicate whether it ran successfully or not.
+
+1.3
+RAM = main memory in computer. When we run a program, the OS loads the program into RAM. The OS reserves additional RAM for the program to use when being run. Ex: data read from file or network, store intermediary values.
+
+In C++, direct memory access is discouraged. Instead, we access memory indirectly through an object. 
+
+Object = region of storage (RAM or CPU register) that can hold a value.
+
+At runtime (program loaded into memory and run), each object is given an actual storage location (RAM or CPU register) to store values. This is called allocation.
+
+1.4
+Identifier - name a variable is accessed by
+Data type - what kind of value the object will store
+
+Copy-initialization:
+int width = 5
+Fallen out of favor in modern C++.
+
+Direct-initialization:
+int width (5);
+Also fallen out of favor in modern C++.
+
+List-initialization:
+int width {5}; // direct-list initialization (preferred)
+int height = {6}; // copy-list-initialization (rare)
+
+List initialization does not allow narrowing conversions. Meaning if you assign a double to an integer, it will raise a compilation error instead of implicitly rounding down to an integer. This only works for intialization, not subsequent assigments.
+
+Value-intialization:
+int width {}; // value-initialization + zero-initialization to value 0
+
+Instantiation - variable has been allocated and initialized
+
+[[maybe_unused]]:
+attribute used to tell compiler that we're okay with a variable going unused in program. 
+ex:
+[[maybe_unused]] double phi { 1.61803 };
+
+1.5
+cout - "character output" - sends data to console
+
+<< - insertion operator
+
+Use multiple insertion operators to concatenate multiple pieces of output.
+
+std::cout is buffered to the console. So if the program crashes or aborts before the buffer (containing outputs) is flushed, the output will not be displayed.
+
+std::endl is inefficient because it outputs a newline and flushes the buffer (slow).
+
+Alternative: '\n'. Moves cursor to the next line of the console without causing a flush.
+Ex:
+std::cout << "Hello World! << '\n';
+
+>> - extraction operator
+
+Extraction process:
+1. Leading whitespaces are discarded from the input buffer. 
+2. If the input buffer is now empty and the operator waits for the user to enter more data.
+3. operator extracts as many consecutive characters as possible (until newline character or character not valid for variable being extracted to)
+
+1.7
+- Identifier cannot be a keyword.
+- Identifier can only be composed of letters, numbers, and the underscore character.
+- Identifier must begin with a letter or underscore. 
+- case sensitive
+
+1.8
+When whitespace is used as a separator, the compiler doesn't care about how much whitespace is used.

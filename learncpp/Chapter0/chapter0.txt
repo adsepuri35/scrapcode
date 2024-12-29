@@ -11,4 +11,29 @@ Compile CLI Command:
 g++ -o <name-of-output-file> <source file>.cpp
 
 0.9 -
- 
+build configuration/target - collection of project settings that determines how your IDE builds the project. Decides executable name, directories to look for, debugging info, how to make the compiler optimize the program, etc.
+
+debug configuration - turns off all optimization. Makes program larger and slower but easier to debug. 
+
+release configuration - used when releasing program to the public. Optimized for size and performance (no debugging info). Useful for testing code performance.
+
+
+0.10 - 
+compilers implement their own changes to the language to enhance compatibility with other versions of the language. Compiler-specific behaviors are called compiler extensions.
+
+Writing programs that use compiler extensions create programs incompatible with C++ standard. Meaning, programs built using non-standard compilers will not compile on other compilers or run properly.
+
+0.11 - 
+diagnostic error - means compiler has decided to halt compilation and indicate it can proceed or the error is really serious.
+diagnostic warning - compiler has decided not to halt compilation. Compilation proceeds.
+
+Whether a compiler emits a diagnostic message or error is entirely up to the specific compiler and can vary. 
+
+0.12
+The versions name correspond with the publication year.
+Ex:
+2011 - C++11
+2017 - C++17
+2020 - C++20
+
+It is common to choose a language standard 1 or 2 versions back from the latest so the best practices for the more recent versions are understood.

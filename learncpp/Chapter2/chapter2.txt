@@ -1,0 +1,23 @@
+Chapter 2:
+
+2.1 
+Nested functions are illegal.
+
+2.2
+The main() function is required to return an int. 
+Explicit function calls to main() are not allowed.
+
+The return value from main is also called a status code to signal that the program was successfully run. (Convention to return 0). 
+
+The main() function will implicitly return 0 if not specified, but best practice to do anyways.
+
+C++ standard has 3 status codes:
+- 0 - program executed successfully
+- EXIT_SUCCESS - program executed successfully
+- EXIT_FAILURE - program did not execute successfully
+These status codes are preprocessor macros defined in the <cstdlib> header.
+
+2.3 
+Return a value from a void function results in compile error
+
+2.4

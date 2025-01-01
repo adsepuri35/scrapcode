@@ -21,3 +21,75 @@ These status codes are preprocessor macros defined in the <cstdlib> header.
 Return a value from a void function results in compile error
 
 2.4
+When a function is called, all function params are created as variables and the values of the arguments are copied to the matching parameter using copy intialization. Called PASS BY VALUE.
+
+2.5
+Local variables are destroyed in the opposite order of creation at the end of the set of curly braces in which they are defined.
+
+2.7
+Compiler compiles contents of code files sequentially. 
+Fixes:
+Option 1 - Reorder function definitions. Doesn't work in the case where function A calls B and function B calls A.
+
+Forward Declaration - tells compiler about the existence of an identifier before defining the identifier.
+
+Ex of forward declaration (no function body):
+
+int add(int x, int y);
+
+int main() {
+    std::cout << add(3, 4) << '\n';
+    return 0;
+}
+
+2.9
+Naming collisions:
+1. Multiple functions with same name in separate files -> linker error
+2. Multiple functions with same name in same file -> compile error
+
+Global namespace - where main() and possibly other functions/variables are defined.
+
+C++ moved all functionality within the standard library into the namespace std.
+
+:: - scope resolution operator. Identifier to the left identifies the namespace and the name to right identifies the symbol within the namespace.
+
+Avoid "using namespace std" because you could define functions with the same signature as functions within the library, resulting in compile errors.
+
+2.10
+Before compilation, the preprocessor makes various changes to the text of the code file.
+
+Translation unit - compiled by compiler. What we get after preprocessor processes code file.
+
+Preprocessor directives - start with '#' and end with a newline (not semicolon). Tell the preprocessor to perform text manipulation tasks.
+
+When the preprocessor reaches an include directive. The preprocessor replaces it with the contents of the file name "iostream" or whatever
+
+macro - rule that defines how input text is converted into replacement output text. 2 types: object-like macros and function-like macros.
+
+By convention, macro names are all upper case
+
+#ifdef - check whether an identifier was previously defined. If so, the code between the #ifdef and matching #endif is compiled.
+
+You can use "#if 0" to exclude a block of code from compilation. To renable, you can do "#if 1"
+
+2.11
+Header files propagate a bunch of related forward declarations into a code file.
+
+Header files consist of:
+1. A header guard
+2. Actual content of header file
+
+Putting function and variable definitions in header files can result in a violation of the one-definition rule
+
+Don't #include cpp files:
+- naming collisions
+- non-conventional
+- changes will cause multiple files to recompile, which can take a while
+
+<> - header files we didn't write ourselves.
+"" - header files we wrote outselves. If it can't find a matching header, it will then search the include directories.
+
+2.12
+"#pragma once" - prevents header files from being included multiple times. Makes the compiler guard the header.
+
+header guards - ensures the contents of a given header file.

@@ -1,0 +1,17 @@
+Chapter 3:
+
+3.1
+Semantic error - error in meaning. A statement is syntactically valid but violates other rules of the language.
+
+3.5
+Alternative to conditionalized debugging is to send debugging info to a log. Logs are written to files on a disk.
+
+C++ contains an output stream named std::clog that is used for writing logging info. By default, std::clog writes to the standard error stream (std::cerr), but you can redirect it to a file instead. But it's still better to use 3rd party logging tools.
+
+3.6
+Step into - step line by line
+Step over - step across an entire function
+Step out - step across all remaining code left to execute
+
+3.9
+Call stack - list of all active functions that have been called to get to the current point of execution. The call stack includes an entry for each function called and which line of code will be returned to when the function returns. When a new function is called, it is added to the top of the call stack. When it returns to the caller, it is removed from the top of the call stack.

@@ -1,0 +1,76 @@
+Chapter 4:
+
+4.1
+_t suffix:
+Many types in newer versions of C++ use a _t suffix, which means "type".
+
+If something uses a _t suffix, it's probably a type.
+Ex: std::nullptr_t
+
+4.3
+Fundamental data type sizes:
+- object must occupy at least 1 byte (so each object has a distinct memory address)
+- char = 8 bits
+- short, int = 16 bits
+- long = 32 bits
+- long long = 64 bits
+- char and char8_t are exactly 1 byte
+
+sizeof() - represent the size of an object of that type in bytes.
+Ex: sizeof(double) = 8 bytes
+
+4.4
+Integers are signed by default.
+8-bit signed integer range: -128 to 127
+
+4.5
+Avoid unsigned numbers because it is easier to get overflow and there can be undefined behavior when mixing signed and unsigned numbers.
+
+4.6
+C++11 provides an alternate set of integer types guaranteed to be the same size on any architecture. Called fixed-width integers.
+Ex: int8_t, int32_t.
+
+int8_t and uint8_t will behave like characters on some sytems.
+
+Using fixed-with integers can make your program slower on some systems. If u use int32_t but your program is faster for processing 64-bit integers, it can make the program slower.
+
+int_fast#_t - fastest integer type with at least # bits. Processed most quickly by CPU.
+
+int_least#_t - smallest signed integer type with width of at least # bits
+
+std::size_t - alias for implementation-defined unsigned integral type. Compiler decides if std::size_t is an unsigned int, unsigned long, unsigned long long, etc.
+
+4.8
+3 floating point data types: single-precision float, double-precision double, extended-precision long double.
+
+f suffix is used to denote a literal of type float.
+
+You can override default precision by using std::setprecision().
+ex:
+std::cout << std::setprecision(17);
+std::cout << 3.33333333333333333333333333333333333333 << '/n';
+
+Floats are less precise than doubles
+
+4.10
+When we print boolean values, std::cout prints 0 for false, 1 for true. Therefore, you can convert integers to booleans only using integers 0 and 1.
+
+non-zero values get converted to true.
+
+4.11
+Chars can be initialized using characters itself or integers.
+
+Escape sequences - start with '\'.
+Ex: '\n'
+
+'\t' - embeds a horizontal tab
+\\ prints a backslash
+\" prints a double quote
+
+4.12
+Floating point values whose decimal part is 0 print without decimal places.
+Ex: 5.0 -> 5
+
+static_cast<new_type>(expression)
+
+signed integral values can be converted to unsigned and vice-versa.

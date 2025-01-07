@@ -1,0 +1,60 @@
+Chapter 5:
+
+5.1
+Named constants - associated with an identifier
+Literal constants - constant values not associated with an identifier
+
+Use "const" keyword to declare a constant variable
+
+Const variables must be initialized when you define them. Const variables can be intitialized from other variables.
+
+A function's return value may also be made const. (Don't do).
+
+type qualifier - keyword applied to a type that modifies how the type behaves. C++ has two type qualifiers: const and volatile. volatile just tells the compiler that an object can have its value changed over time.
+
+5.2 
+Magic number is a literal (usually number) that has an unclear meaning or may need to be changed later. Using them is bad practice.
+
+5.3 
+Octal literal - prefix with 0
+ex. int x {012}; // x = 10
+
+Hexadecimal literal - prefix with 0x
+ex. int x {0xF}; // x = 15
+
+No binary literals (before C++14) but can still use hexadecimal literals for any needs
+
+Binary literal - prefix with 0b
+ex. int bin{0b11}; // bin = 3
+
+You can use std::dec, std::oct, std::hex to change output format.
+
+5.4
+Compiler-time evaluation - when the compiler fully or partially evaluates an expression.
+
+Constant folding - compiler replaces expressions that have literal operands with the result of the expression. 
+ex. compiler recognizes that 3 + 4 is 7 and replaces the expression with the literal 7.
+
+Constant propagation - compiler replaces variables known to have constant values with their values. 
+ex. compiler replaces any use of variable x with value 7.
+
+Dead code elimination - compiler removes code that may be executed but has no effect on program behavior.
+
+Compile-time constants - constant whose value is known at compile time.
+ex. literals, constant objects
+
+Runtime constant - constant whose value is determined in a runtime context.
+ex. constant function parameters, constant objects whose initializers are non-constants
+
+5.5
+Constant expression - non-empty sequence of literals, constant variables, operators, and function calls. All must be evaluatable at compile-time.
+
+5.6 
+constexpr - compile-time constant.
+ex.
+constexpr int sum {4 + 5};
+constexpr int something {sum};
+
+The value of the initializer must be known at compile-time. Can be evaluated at runtime or compile-time
+
+5.7

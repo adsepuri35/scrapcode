@@ -1,0 +1,9 @@
+2 phases:
+
+Local phase 1 - classical search algorithm produces desirable constructions. 
+
+Global phase 2 - transformer NN trained on best constructions.
+
+Samples from trained transformer used as seeds for the first phase -> process repeated.
+
+How to make it work with Turyn sequences:

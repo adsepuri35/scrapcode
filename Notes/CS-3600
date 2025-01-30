@@ -1,0 +1,21 @@
+Lecture 1:
+AI - science of making machines that think like people, think rationally, act like people, act rationally.
+
+Rational - maximally achieving pre-defined goals
+Brief history of AI:
+40s-50s - boolean circuit model of brain, Turing's "Computing Machinery and Intelligence"
+50s-70s - early AI programs
+70s-90s - statistical methods for speech recognition, systems industry booms
+90s - statistical approaches, Deep Blue chess bot.
+2000-2014 - Modern AI foundations, neural networks, AlphaGo, IBM Watson
+2014-now - Deep Learning Revolution, imagenet accuracy
+
+LLMs - transformer neural architecture, good at learning to emulate language, GPT-3 = 175 billion parameters. GPT-4 = 1.8 Trillion parameters
+
+
+Lecture 2:
+Agent - entity that perceives and acts.
+Utility - numerical value assigned to a potential outcome or action. Represents how desirable an outcome is to an AI system.
+Rational agent - selects actions to maximize expected utility
+
+Agents perceives environment through sensors. The action space is determined and then actuators perform actions on the environment to influence it.

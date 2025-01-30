@@ -100,3 +100,41 @@ Heuristic implementation is important.
 Relaxed problems - modified versions of original problems (weaken constraints, simplify, gain understanding to problem structure)
 
 Lecture 5:
+
+Local search: use iterative improvement algos to improve a current state
+
+Simulated annealing: global optimization algo
+- allow bad moves occasionally
+- high temp = more bad moves allowed. 
+- Gradually reduce temp according to some schedule
+
+Local Beam Search:
+- Start with K copies of local search algorithm, initialized randomly
+- During each iteration: Generate successors for all k states. Choose best K to be new current states.
+- The searches communicate, so better than parallel local searches
+
+Genetic Algos:
+- Resample K individuals at each step (selection)
+- Combine with crossover operation and mutation for variety
+
+Lecture 6:
+
+Game = Task environment with >1 agents
+Want algorithms to find strategy to recommend moves from different states
+
+Zero-Sum games - pure competition, opposite utils
+
+General sum - independendent utilities, lot are possible (competition, cooperation, etc.)
+
+Adverserial search - searching for optimal strats to maximize an individual's own payoff (minimizing opponent)
+
+Minimax search - zero sum games. Consider opponents moves and make a move
+Max = agent score you want to maximize
+Min - opponent score you want to minimize
+Same efficiencies as DFS
+
+Alpha-Beta pruning - optimization technique for minimax search. reduce number of nodes to evaluate in game tree. Prune branches that won't affect final decision to improve efficiency.
+
+Resource limits - can't search to leaves for most games -> depth-limited search. No guarantee of optimal play.
+
+Evaluation functions - score non-terminals in depth-limited search. Assess desirability of a given state and provide a score.

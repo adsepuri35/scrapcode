@@ -19,3 +19,84 @@ Utility - numerical value assigned to a potential outcome or action. Represents 
 Rational agent - selects actions to maximize expected utility
 
 Agents perceives environment through sensors. The action space is determined and then actuators perform actions on the environment to influence it.
+
+Reflex agents - choose action based on current perceptions. Don't consider future consequences.
+
+Planning agents - make decisions based on consequences of actions. Have models of how world evolves.
+
+Learning agents - involve feedback and learning goals
+
+Search problem - consists of state space. Successor function (actions, cost). Start state and goal test.
+
+Solution - set of actions that transforms start state to end state
+
+Lecture 3:
+
+Problem defined by - initial state, successor function (set of action pairs), goal test, path cost (additive)
+
+Problem types:
+Single state - deterministic and fully observable
+Conformant - non-observable; solution is a sequence
+Contingency - nondeterministic and/or partially observable. Percepts provide new info.
+Exploration - unknown state space
+
+State space graph - math representatioin of search problem
+Goal test = set of goal nodes (maybe only one)
+State space graph = all states are unique
+
+Search tree:
+- what if tree of plans and outcomes
+- start state = root node
+- can't build whole tree for most problems
+
+state = representation of physical configuration
+node = data structure part of tree
+fringe - partial plans under consideration or set of all nodes at end of all visited paths
+
+DFS: expand deepest node first. Fringe = LIFO stack. If m tiers in a tree, takes O(b^m) time
+Not the most optimal because it finds the leftmost solution, regardless of depth or cost
+Time = O(b^m)
+Space = O(bm)
+Not complete - fails in infinite depth states. spaces with loops
+
+BFS - expand shallowest node first. Fringe = FIFO queue
+Complete - Yes (b is finite)
+Time = 1 + b + b^2 + ... + b^d = O(b^(d+1))
+Space = O(b^(d+1))
+Optimal = Yes (if cost = 1 per step); not optimal in general
+
+Iterative Deepening - DFS space advantage with BFS time
+Complete - Yes
+Time = O(b^d)
+Space = O(b^d)
+
+Uniform Cost Search - expand a cheapest node first. Fringe = Priority queue. Priority = cumulative cost
+
+Greedy Search - expand node that you think is closest to a goal state. Worst case = badly guided DFS.
+
+Uniform-cost - orders by path cost or backwards cost, g(n)
+Greedy - orders by goal proximity or forward cost, h(n)
+
+A* Search: f(n) = g(n) + h(n)
+
+Lecture 4: 
+
+Admissable heuristic - heuristic function to estimate the distance from given node to goal node. It's considered admissable if it never overestimates true distance to the goal. Guarantee optimality
+
+Heuristic is admissable if: 0 <= h(n) <= h*(n)
+h*(n) is the true cost to the nearest goal
+
+semi-lattice - partially ordered set with a least upper bound operation in context of heuristics (functions estimating distance from node to goal)
+
+Main idea: estimated cost heuristics <= actual costs
+
+Graph search - don't expand state/node twice
+
+A*:
+Uses backward and (estimated) forward costs
+Optimal for admissable/consistent heuristics
+Heuristic implementation is important.
+
+Relaxed problems - modified versions of original problems (weaken constraints, simplify, gain understanding to problem structure)
+
+Lecture 5:

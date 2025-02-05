@@ -138,3 +138,19 @@ Alpha-Beta pruning - optimization technique for minimax search. reduce number of
 Resource limits - can't search to leaves for most games -> depth-limited search. No guarantee of optimal play.
 
 Evaluation functions - score non-terminals in depth-limited search. Assess desirability of a given state and provide a score.
+
+Lecture 6 (again) - 
+
+Game = task environment with > 1 agent
+Policy = Solution for a player
+Zero-Sum Games - agents with opposite utilities. pure competition - one maximizes while the other minimizes.
+General-Sum Games - agents have independent utilities (measure of desirability of payoff from a certain outcome)
+Adverserial search - agents consider the strategies of opponents.
+Value of state - best achievable utility from a state
+Minimax search - State space search tree, players alternate turns, compute each node's minimax value: (best utility achievable against a rational adversary). Uses evaluation function to assign scores for states. Chooses optimal path through recursive exploration and backtracking.
+Multi-agent Utilities? - Terminal nodes have utility tuples where each player seeks to maximize their own component
+Minimax efficiency - Time O(b^m), Space O(bm)
+Alpha-beta pruning - no effect on actual minimax values. Alpha = Max's best option on path to root. Beta = Min's best option on path to root. Used to prune branches, subtrees
+Resources Limits - Can't search to leaves in most games, so we use depth-limited search. No guarantee of optimal play
+Evaluation function - score non-terminal states in depth-limited search. Weighted linear sum of certain features
+Alpha-beta pruning - time complexity = O(b^(m/2)) in the best-case scenario

@@ -139,6 +139,19 @@ Resource limits - can't search to leaves for most games -> depth-limited search.
 
 Evaluation functions - score non-terminals in depth-limited search. Assess desirability of a given state and provide a score.
 
+Lecture 5:
+Local Search Algorithms:
+- Path is irrelevant. Goal is solution.
+- Find configuration satisfying constraints.
+- Iterative improvement algos
+
+Simulated annealing:
+- allow bad moves occasionally.
+- High temp = more bad moves allowed
+
+Local beam search:
+- Copies of local search algos, randomly intialized randomly
+
 Lecture 6 (again) - 
 
 Game = task environment with > 1 agent
@@ -154,3 +167,34 @@ Alpha-beta pruning - no effect on actual minimax values. Alpha = Max's best opti
 Resources Limits - Can't search to leaves in most games, so we use depth-limited search. No guarantee of optimal play
 Evaluation function - score non-terminal states in depth-limited search. Weighted linear sum of certain features
 Alpha-beta pruning - time complexity = O(b^(m/2)) in the best-case scenario
+
+Lecture 7:
+Expectimax Search - variant of Minimax Search, uses probablility and expectation to handle uncertainty.
+Values reflect average case outcomes (not worst-case)
+Max nodes like minimax search but chance nodes are like min nodes with an uncertain outcome. So we calculate expected utility (take weighted avg of children)
+
+Minimax - better for perfect information games (both players have complete knowledge of game state). Assume opponents play optimally. Ex. Chess, Tic-Tac-Toe
+
+Expectimax - probabilistic environments. Take EV of possible outcomes at chance nodes instead of assuming optimal opponent play. Ex. Poker, 2048. More computationally expensive. Doesn't handle opponent
+
+Expectiminimax: 3 types of nodes. Max nodes, min nodes, chance nodes (random events) that compute EV by averaging outcomes with probabilities.
+Ex. backgammon (dice rolls are random), Poker (random card draws) Best of both worlds.
+
+Roullouts - simulate games from the current position to a terminal state using a policty (often random moves)
+
+MCTS:
+Evaluation by rollouts - play multiple games to termination from state s and count wins + losses.
+Selective search - explore parts of tree that improve decision at the root, regardless of depth.
+True value of position = fraction of wins
+
+UCB - Upper Confidence Bound Algorithm - balance exploration and exploitation.
+Formula: Total reward/number of times action selected + Exploration Constant C (Higher C = more exploration)
+
+Lecture 8:
+MCTS - Repeat until out of time.
+- Selection: recursively apply UCB to choose path down to leaf node n
+- Expansion: add new child c to n
+- Simulation: run rollout from c
+- Update U and N counts from c back to root
+N(n) = # of rollouts from node n
+U(n) = total utility of rollouts (ex. # of wins)

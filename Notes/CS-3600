@@ -198,3 +198,9 @@ MCTS - Repeat until out of time.
 - Update U and N counts from c back to root
 N(n) = # of rollouts from node n
 U(n) = total utility of rollouts (ex. # of wins)
+
+Simulated annealing:
+Start with a high temperature (more exploration) and gradually decrease temperature, making the algo more selective. 
+
+Local Beam Search:
+Heuristic algo that combines elements of local search and beam search. LBS explores solution space by generating new solution through neighborhood function. Selects k most promising area at each iteration. Eventually converges to a good solution

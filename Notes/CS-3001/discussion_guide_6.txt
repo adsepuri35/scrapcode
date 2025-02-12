@@ -1,0 +1,29 @@
+Internal Realism - truth and reality depend on conceptual frameworks. It argues that truth is shaped by language, thought, and social context. Knowledge is built within these frameworks, helping us interpret experiences through shared meanings.
+
+Social Construction of Knowledge - knowledge is not just discovered but shaped by social interactions and cultural norms. What we accept as "true" depends on historical and societal contexts.
+
+Internet Does Well?
+- Global connectivity and allowing for mostly free knowledge sharing.
+- Facilitates collaboration and learning through platforms like Wikipedia, academic databases.
+- Search engines and AI-driven tools allow for efficient information retrieval and synthesis.
+
+Internet Do Better?
+- Addressing misinformation and disinformation by improving fact-checking mechanisms.
+- Reducing algorithmic biases that create echo chambers and hinder exposure to diverse perspectives.
+- Promoting accessibility and reducing disparities in internet access and digital resources.
+
+How to Redesign Part of the Internet?
+- Implementing transparent AI-driven credibility scoring for sources to help users assess the reliability of information.
+- Encouraging user participation in content moderation and verification through crowdsourced fact-checking models. (Combine with above)
+
+How to figure out what to believe online?
+- Enhancing fact-checking organizations and integrating them into search engines and social media platforms.
+- Holding tech companies accountable for the spread of false information through regulation and ethical AI design.
+
+Types of Intellectual Property:
+
+Trademark - recognizable sign, design, or expression that identifies products or services of a particular source. It differentiates brands and ensures consumer trust.
+
+Patent - grants an inventor exclusive rights to their invention for a certain period. Prevents others from making, using, or selling the invention without permission.
+
+Copyright - protects original works of authorship, including literature, music, film, art, and software. Lasts for the creator’s lifetime plus additional years. Prevents unauthorized reproduction and distribution of the work while allowing for "fair use" exceptions in education, commentary, and parody.

@@ -204,3 +204,83 @@ Start with a high temperature (more exploration) and gradually decrease temperat
 
 Local Beam Search:
 Heuristic algo that combines elements of local search and beam search. LBS explores solution space by generating new solution through neighborhood function. Selects k most promising area at each iteration. Eventually converges to a good solution
+
+
+Quiz 3 Studying:
+
+Lecture 7:
+alpha = MAX's best option on path to root
+beta = MIN's best option on path to root
+
+Evalutation function:
+- ideally returns actual minimax value of position
+- in practice is the weighted linear sum of features
+
+Expectimax - compute average score under optimal play. We have chance nodes now that are like min nodes with uncertain outcomes. Suited for probabilistic outcomes. Uses expectation-based evaluation function.
+
+Minimax uses a simple evaluation function and searches the game tree depth-first.
+
+Expectiminimax - combination of the 2.
+
+MCTS:
+Rollouts = play multiple games to termination from a state and count wins and losses. 
+Selective search = explore parts of the tree what will help improve the decision at the root, regardless of depth.
+
+UCB (Upper Confidence Bound):
+N(n) = number of rollouts from node n
+U(n) = total utility of rollouts (# of wins)
+
+Lecture 8:
+Propositional Logic - deals with simple statements (propositions) than be either true or false. Lacks quantifiers.
+
+First-Order Logic - uses predicates/relations to describe properties and relationships. Includes quantifiers and allows functions.
+
+Entailment: a |= b. Means that a entails b or that every world where a is true, b is true.
+
+Proof - demonstration of entailment between a and b.
+Sound algorithm - all conclusions drawn from this algo are guaranteed to be true.
+Complete algorithm - can prove every statement that is logically entailed.
+
+Implication - syntactic relationship between two statements, where one statement logically leads to another. Ex. α ⇒ β
+
+Successor-state axiom - logical statement that specifies the conditions under which a property or relation changes its truth value from one state to another
+
+Reasoning Tasks:
+- localization (where am I?)
+- Mapping
+- simultaneous localization and mapping
+- Planning (what action sequences is guaranteed to reach the goal?)
+
+Lecture 9:
+Utilities - functions that describe an agent's preferences.
+
+A rational agent should choose the action that maximizes its expected utility.
+
+Preference: A > B
+Indifference: A ~ B
+
+MEU Principle:
+- Choose the action that maximizes expected utility
+- Rationality does not require manipulating utilities and probabilities
+
+Utilities map states to real numbers.
+
+Decision Networks:
+Nodes for utility and actions
+Chance nodes = ovals
+Actions = rectangles
+Utility node = diamond 
+
+Notation:
+EU(leave) = Expected utility of taking action leave
+MEU(0) = MEU, given no info
+EU(leave | bad) = EU of choosing leave given the forecast is bad
+MEU(F = bad) = MEU given you know the forecast is bad
+
+Value of Perfect Information (VPI)
+MEU(e) = MEU given evidence E = e
+VPI(E' | e) = expected gain in utility for knowing the value of E', given I know the value of e so far
+
+Value of information = expected improvement in decision quality.
+
+Lecture 10:

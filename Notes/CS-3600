@@ -283,4 +283,42 @@ VPI(E' | e) = expected gain in utility for knowing the value of E', given I know
 
 Value of information = expected improvement in decision quality.
 
-Lecture 10:
+Quiz 4:
+
+Lecture 9:
+Utilities - functions that describe agent preferences
+
+Maximum Expected Utility - rational agent would choose an action that maximizes expected utility.
+
+Magnitudes can help differentiate between more desirable and less desirable outcomes.
+
+Decision Networks - help make optimal decisions when outcomes are uncertain. Use MEU
+
+VPI - quantifies how much a decision maker would be willing to pay to obtain complete and accurate info about uncertain event before making a decision.
+
+VPI = EV (w/ perfect info) - EV (w/o perfect info)
+
+Lecture 10-12:
+
+MDPs:
+Consist of set of states, set of actions, transition function, reward function. Model decision-making in situations that are partly random and partly under control of a decision-maker.
+
+Goal: find a policy that maximizes the expected cumulative reward over time.
+
+To solve an MDP, we need to find the optimal policy that maximizes the expected cumulative reward.
+
+Value Iteration:
+Iteratively computes the value function V(s). Represents the expected cumulative reward starting from state s and following the optimal policy. Uses the Bellman equation to update the value function. Once the value function converges, the optimal policy can be derived by choosing actions that maximize the EV.
+
+Policy Iteration:
+Alternates between policy evaluation (computing the value function for a given policy) and policy improvement (updating the policy to maximize the value function). This continues until the policy converges to the optimal policy.
+
+Discount Factor: Number between 0 and 1 (gamma). Represents preference of immediate rewards over future rewards. Used to compute present value of future rewards in the cumulative reward calculation.
+0 = only immediate rewards matter, future ignored
+1 = future rewards valued same as immediate
+0 - 1 = future rewards discounted exponentially over time
+
+Policy extraction - deriving the optimal policy from a given value function V(s). Agents selects the action that leads to the highest EV. 
+
+Certainty Equivalence:
+Guaranteed amount of money that an individual considers equally desirable as a risky gamble.

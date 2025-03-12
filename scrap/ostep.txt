@@ -1,0 +1,40 @@
+Virtualization - OS takes a physical resource (processor, memory, or disk) and transforms into a more general, more powerful, easy-to-use version of itself. This is why we sometimes call the OS a virtual machine.
+
+OS provides APIs for users to call. 
+
+OS also known as resource manager because it determine what devices, resources to allocate to different programs/processes.
+
+Resources - CPU, memory, disk
+
+Virtualizing the CPU - turning a single CPU into a seemingly infinite number of CPUs, allowing multiple programs to be run at once.
+
+Process identifier (PID) - unique per running process
+
+Multiple processes running program at the same time and increment value at the same location. However, each process updates the value independently. Here, OS is virtualizing memory. Each process accesses its own private virtual address space (the OS maps onto the physical memory of the machine).
+
+Thread - function running within the same memory space as other functions, with more than one of them active at a time.
+
+Persistence - during a power shutoff or system crash, we want to make sure that the data persists within the system.
+
+Hard drives + SSD (solid-state drives) are common repositories for long-lived info.
+
+File system - Software that manages the disk. Stores any files the user creates.
+
+assert() ensures something is something. If not, program terminates.
+
+fsync() ensures all data written to the file is flushed to the disk. Without it, data could remain in the OS buffer cache and be lost in a system crash. 
+
+Device driver - code in OS that knows how to deal with a specific device.
+
+For performance reasons, most file systems delay writes for a while.
+
+Design goals - provide high performance and minimize oveheads of the OS (additional resources consumed by OS to perform tasks)
+
+History:
+Batch processing - number of jobs set up and then run in the batch by an operator
+
+System call - transfers control into the OS while raising hardware privilege level. User apps run in user mode.
+
+Kernel mode - OS has full access to the hardware of the system. 
+
+Trap - hardware instruction that raises privilege to kernel and OS services the request.

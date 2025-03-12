@@ -322,3 +322,26 @@ Policy extraction - deriving the optimal policy from a given value function V(s)
 
 Certainty Equivalence:
 Guaranteed amount of money that an individual considers equally desirable as a risky gamble.
+
+Lecture 13:
+Reinforcement Learning:
+MDP initially unknown:
+- try unknown actions to get info
+- repeat actions many times to get good estimates
+
+Basic idea - maximize expected rewards based on observed samples of transitions
+
+RL process:
+Still assume an MDP: states s, actions a, Transition model, reward function. Still looking for a policy.
+Twist - we don't know T or R-we don't know what states are good and what actions do
+
+Approaches to RL: 
+- direct evaluation
+- temporal difference learning
+- q-learning
+
+Model-based Learning:
+Agent learns a model of environment's dynamics.
+Then uses it to simulate future scenarios.
+Then solves MDP.
+Can't scale to large state space or function in partially observable environments

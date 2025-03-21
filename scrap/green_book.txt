@@ -1,0 +1,68 @@
+2.2
+River crossing -
+Intuition: We want to pair C, D and together, because they take the longest to cross and D paired with anyone will take 10 minutes, so might as well pair him with C who takes the second longest to cross.
+1,2 - 2
+1 - 3
+5, 10 - 13
+2 - 15
+1, 2 - 17
+
+Birthday problem - Revisit
+Days = {1,2,4,5,7,8}
+Months = {Mar, Jun, Sept, Dec}
+If unique day, C knows the date immediately. So it can't be June 7 or December 2nd. Because you know that C doesn't know the birthday initially, you can eliminate June and December.
+
+Card game -
+Intuition: Seems like it will always end in a tie. Because of the symmetric nature of having 52 cards (even). If there were an odd number of cards thats a different story and it would depend on if the card was black or red. I would pay 0.
+
+Burning ropes - 
+Intuition: Burn one rope both ends until its gone is 30 min. If we do that for one rope and for the other rope, we burn one side, we have a 30 min rope remaining. We can burn both ends of that in 15 min. Giving us 45 min measured.
+
+Hourglasses -
+Begin both at the same time. When 4 min hourglass ends, we have 3 minutes left on the 7 min hourglass. If we start a 4 minute hourglass immediately after that, we have 1 minute left on the 4 min hourglass when the 7 min hourglass runs out (start measuring here). We have 1 min so far, if we flip the 4 min one 2 times in a row, we have 8 minutes. 1 + 4 + 4 = 9
+
+Defective ball -
+If you know whether the defective ball is heavier or lighter, you can identify the defective ball among up to 3^n balls using no more than n measurements.
+
+Trailing Zeros - 
+Each pair of 2 and 5 add a trailing zeros. So does each multiple of 10.
+floor(100 / 2) = 50
+floor(100 / 5) = 20
+We can inspect the 20 numbers further. 4 are divisible by 5^2, so the total frequency of 5 is 24 and there are 24 trailing zeros.
+My way:
+9 zeroes added by (10, 20, 30, ..., 90).
+2 added by 100
+13 added by multiples of 5 (not multiples of 10) paired with 2 (5, 15, 25). Double count for multiples of 5^2 (25, 50, 75)
+
+Horse race - 
+We need to see every horse race.
+Attempt:
+Number 1-25. Top 3 for 5 races still possible. 15 horses left.
+If we take the winners of each race (5) and race them. We know that for sure, that winner is the fastest. We take the 2nd and 3rd horses from the winners previous race, the 2nd place horse from current 2nd place horses previous race and the third place horse and race them (5). Then we can determine the 2nd and 3rd fastest horses.
+
+Infinite sequence -
+We know that x^x^x^x... = 2. So if we extract one x term, we have x^(x^x^x^x...) = x^2 = 2. So x = sqrt(2).
+
+2.3
+Box packing - 
+Brick volume = 4, box volume = 216, 53 * 4 = 212
+Imagine the 6x6x6 cube is divided into 2x2x2 cubes. Like a chessboard, the colors alternate. 216 / 8 = 27. So there are 27 cubes. 14 white cubes and 13 black cubes. each cube can be used by max 4 bricks. 13 * 4 = 52. So we can't place 53 bricks.
+
+Calendar cubes -
+0 - only one cube, since you can't have 00.
+1, 2 on both cubes. (11, 22)
+6 doubles as a 9 -> keep on one die
+Die 1 - 0,1,2,3,4,5
+Die 2 - 0,1,2,6,7,8
+
+Door to offer - 
+2 scenarios:
+1. Truther guards offer. Liar guards exit
+2. Truther guards exit. Liar guards offer
+If we ask straightforward question (u guarding the door?) In scenario 1, both answer yes. In scenario 2, both say no. So that wouldn't work.
+Involve both guards.
+Question - "Would the other guard say that you are guarding the door to the offer?"
+In scenario 1, if we ask truther, he would say no (liar would say the truther is not guarding the door). If we ask the liar, he would say yes (the truther would say the liar is not guarding the door (no)). In scenario 2, if we ask the truther, he would say yes (liar would say truther is guarding the door to the offer). If we ask the liar, he would say no (truther would say the liar is guarding the door to the offer).
+So if the guard says yes, we choose the other door. If the guard says no, we choose that door.
+
+Message delivery

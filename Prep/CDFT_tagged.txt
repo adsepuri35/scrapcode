@@ -1,2 +1,0 @@
-Leetcode 622 - Design Circular queue
-    - Problem description hints at using an array but it is much easier to just implement a singly linked list.

@@ -65,4 +65,38 @@ Question - "Would the other guard say that you are guarding the door to the offe
 In scenario 1, if we ask truther, he would say no (liar would say the truther is not guarding the door). If we ask the liar, he would say yes (the truther would say the liar is not guarding the door (no)). In scenario 2, if we ask the truther, he would say yes (liar would say truther is guarding the door to the offer). If we ask the liar, he would say no (truther would say the liar is guarding the door to the offer).
 So if the guard says yes, we choose the other door. If the guard says no, we choose that door.
 
-Message delivery
+Message delivery - 
+You and your colleague each have a unique key. Place 2 locks on the box, one that can be opened by your key and the other can be opened by your colleague.
+If you want to send documents to your colleague. Place the documents in the box, lock your lock. Colleague receives it, locks his lock, sends to you. You unlock your lock, and send it to colleague. Colleague unlocks his lock and accesses the documents. The box always stays locked in transit.
+
+Crossing the stream - 
+Traveler has:
+cat, mouse, cheese
+raft can fit him, one other item
+cat left w/ mouse, it will eat it
+mouse left w/ cheese, it will eat it
+Attempt 1:
+Only option is to cross w/ mouse. mouse is on other side.
+Goes back by himself
+Takes the cheese to other side. takes mouse back with him.
+Drops off mouse on og side, takes cat with him. drops off cat.
+Goes to og side by himself.
+Picks up mouse and goes to other side.
+All items are on the other side.
+
+Last ball - 
+Consider every outcome:
+Both blue = (B,R) -> (B - 1, R)
+Both red = (B,R) -> (B + 1, R - 2)
+Blue and red = (B,R) -> (B - 1, R)
+Red only stays the same or decreases by 2. We know that the number of balls decrease by 1 in every iteration. Since the number of blue balls can be odd but the number of red can't, the last ball must be blue since we start with 14 red (even). If the number of red balls was odd initially. The last ball would be red.
+
+Light switches - 
+Remember that after we turn the light on and off, the lightbulb will be hot. With 3 switches, it's simple. With 4 switches, we introduce a binary factor. (on/off, hot or cold.) However, we can still do it in one go.
+Turn on switch 1 and 2, wait for a bit. Turn off switch 2 and turn on switch 3. If hot and on -> 1. hot and off -> 2. cold and on -> 3. cold and off -> 4.
+
+Quant salary - 
+Multiple solutions. Intuition - the average can be calculated as the sum of all salaries divided by the number of quants (8). So the first quant can pick a random number add his salary to it. The 2nd quant will add their salary and so on until all quants have added their salary to the sum. The first quant will then subtract the random number and divide by 8 to get the average salary.
+
+2.4
+Coin piles -

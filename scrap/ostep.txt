@@ -44,3 +44,96 @@ Trap - hardware instruction that raises privilege to kernel and OS services the 
 Virtualization
 
 4 - Processes:
+Process - running program.
+One usually wants to run more than one program at a time.
+
+OS creates an illusion by virtualizing the CPU. Running one process, stopping it, running another...
+This is called "time sharing" of the CPU. 
+Each process will run more slowly if CPU must be shared.
+
+Space sharing - resource is divided (in space) among those who wish to use it. Ex. Disk space
+
+Context switch - OS stops running one program and starts running another on a given CPU
+
+Policies - algorithms for making some decision with the OS. Ex. Scheduling policy (uses historical info, workload knowledge, performance metrics)
+
+Machine state - what a program can read or update when it is running.
+Obvious component of machine state is memory.
+Address space - memory that a process can address (read/write to)
+Registers - instructions read or update registers so they are integral to process execution
+Special registers:
+Program counter (instruction pointer or IP) - which instruction of the process will execute next.
+Stack pointer and frame pointer manage the stack for function parameters, local variables, return addresses.
+Programs also access persistent storage devices. I/0 info might include a list of files the process currently has open.
+
+4.2 Process API
+Create - OS must be able to create new processes. Ex. type a command into the shell, the OS is invoked to create a new process to run the program indicated.
+Destroy - Users sometimes have the option to kill processes.
+Wait - wait for a process to stop running.
+Miscellaneous - ex. suspend process and then resume
+Status - how long process has run, what state it is in, etc.
+
+4.3 Process creation
+OS must load code and any static data (ex. initialized variables) into memory, into the address space of the process. Programs initially reside on disk (SSDs) in an executable format. So OS reads the bytes from disk and places them in memory elsewhere.
+
+Early OS loaded the process all at once before running the program. Modern OSes perform the process lazily (loading pieces of code or data only as needed during program execution).
+
+Just remember the OS must do some work to get the important program bits from disk to memory.
+
+Before running the process, OS must allocate memory for the program's run-time stack (or just stack). C programs use the stack for local variables, function parameters, and return addresses. The OS allocates this memory and gives it to the process. It will fill in the parameters to the main function (argc and argv array).
+
+OS might allocate memory for program's heap. In C, heap used for explicitly requested dynamically-allocated data. Ex. malloc(), free(). Heap needed for data structures like linked-lists, hash tables, trees, etc.  Heap is small initially. Over time, OS could get involved and request more memory to the process.
+
+OS does initialization tasks for I/O. IN UNIX systems, each process by default has three open file descriptros for std input, output, and error. They let programs easily read input from terminal and print output to screen. Will cover in persistence.
+
+Now OS can start running the program at entry point main(). Jumps to main() routine, OS transfers control of the CPU to the newly created process and begins execution.
+
+4.4 Process States
+Different states a process can be in:
+Running - process runnning on processor (executing instructions)
+Ready - process is ready be run but OS has not chosen to run it yet
+Blocked - process has performed an operation that makes it not ready to run until some other event takes place. Ex: process initiates I/0 request to a disk, it becomes blocked and some other process can use the processor.
+
+Scheduled - process moved from ready to running
+Opposite = descheduled
+
+4.5 Data structures
+OS maintains data structures to keep track of relevant info. 
+Process lists - keeps track of the state of each process. Should also keep track of blocked processes. When I/O event completes, OS can make sure to wake the correct process and ready it to run it again.
+
+Pieces of info OS tracks about process:
+Register context - holds contents of registers for stopped processes. When process stopped, registers saved to memory location. OS can rerun process by restoring registers. (Context switch)
+
+Other possible states:
+Initial - when process first created
+Final/Zombie - process finished running but not yet cleaned up. This can allow the parent that created the process to examine return code and ensure successful execution. 0 = successful, any other number = otherwise.
+
+When finished the parent can make a final call to wait for the completion of the child and to indicate to the OS that it can clean up relevant data strucutres for the extinct process.
+
+PCB (Process Control Block) - individual structure that stores info about a process.
+
+5 - Interlude: Process API
+Process creation in UNIX systems. UNIX creates a new process with 2 system calls: fork() and exec(). wait() can be used by a process wishing to wait for a process it has created to complete.
+
+fork():
+Used to create a new process. Odd routine
+The process that is create is almost an exact copy of the calling process. So for the OS, looks like 2 copies of the program p1 running, both are about to return from the fork(). The newly created process (child) doesn't start running at main(), it comes to life as if it called fork() itself.
+Child receives return code of 0 while parent receives PID of newly created child.
+
+wait():
+parent waits for a child process to finish what it has been doing.
+wait(NULL) returns the PID of the terminated child.
+
+exec():
+Run a program different from the calling program. fork() runs a copy of the same program. exec() is for different.
+
+Separation of fork() and exec() allows shell code to run after fork() but before call to exec()
+
+Shell is a user program. Assume you type a command. Shell figures out where in the file system the executable is, calls fork() to create a new child process to run the command, calls some variant of exec() to run the command and waits for it to complete by calling wait(). 
+
+Output of a process is connected to an in-kernal pipe (queue) and the input of another process is connected to the same pipe. So output of one process used as input for another.
+
+signal():
+sys call for process to catch signals. Could suspend execute or run particular piece of code, etc.
+
+Users generally have their own processes which only they can control. Root users have elevated privileges over these processes.

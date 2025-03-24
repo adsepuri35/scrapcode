@@ -137,3 +137,43 @@ signal():
 sys call for process to catch signals. Could suspend execute or run particular piece of code, etc.
 
 Users generally have their own processes which only they can control. Root users have elevated privileges over these processes.
+
+6 - Mechanism: Limited Direct execution
+Direct exec protocol:
+OS:
+create entry for process list
+allocate memory for program
+load program into memory
+set up stack with argc/argv
+clear registers
+execute call main()
+Program:
+run main(), execute return from main
+OS:
+Free memory of process
+Remove from process list.
+
+User mode - restricted. Can't issue I/O requests. Contrast = kernel mode
+When user processes want to perform elevated operation, they perform a system call (allow kernel to expose key functionalities to user programs ex. accessing file systems, creating/destroying processes). 
+
+Trap table created at boot time by kernel
+
+Sys call num to specify exact system call. User code places the num in a register or in the stack. OS validates it. This is an extra layer of security.
+
+Return from trap instruction to start process execution
+
+Problem #2 - switching between processes
+When a program does something illegal (divide by zero), it generates a trap to the OS. OS resurps control of the CPU.
+
+Timer interrupt - timer device raises an interrupt every couple millizeconds. current process haltes, interrupt handler runs. OS regains control of CPU. Does what it wants (starts new process if necessary). Timer turned on during boot. Can be turned on/off later. When interrupt occurs, a decent portion of the state of the process should be saved.
+
+Context switch - OS saves few register values for current process (onto kernel stack). Restore few for soon to be running process.
+
+Each process has its own kernel stack.
+Stores function call data, local vars, return addresses, etc.
+
+Reboot is useful because the software is reverted to a known state.
+
+There are user and kernel registers for a given process. During register saves/restores and interrupt, user registers are implicitly saved by hardware using the kernel stack. When OS switches from one process to another, the kernel registers are saved by OS (into memory in the process structure of the process). Kernel stacks are temporary and only valid while the process is currently running.
+
+OS could disable interrupts during interrupt processing. Locking mechanisms to protect interal data structures.

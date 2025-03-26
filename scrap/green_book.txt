@@ -98,5 +98,18 @@ Turn on switch 1 and 2, wait for a bit. Turn off switch 2 and turn on switch 3. 
 Quant salary - 
 Multiple solutions. Intuition - the average can be calculated as the sum of all salaries divided by the number of quants (8). So the first quant can pick a random number add his salary to it. The 2nd quant will add their salary and so on until all quants have added their salary to the sum. The first quant will then subtract the random number and divide by 8 to get the average salary.
 
-2.4
-Coin piles -
+2.4 + 2.5 // To Do
+
+2.6
+Matching Socks -
+Choose 3 socks. They can be red, yellow, and blue. The next sock chosen will have to be one of those colors. Hence, you need to choose 4 socks.
+
+Handshakes - 
+Attempt: 26 total people. 25 people shook hands with >= 1 person. You shook hands with 25. Each person can shake between 1-24 people = 24 people. Since there are 25 people, someone had to have shaken the same number of hands as someone else.
+
+Have we met before? -
+Use mutual exclusion. Either you know >= 3 of the people or you don't know >= 3 people. In either case, if we consider each case, if those 3 people you know didnt meet each other, the statement holds and if the 3 people you don't know all know each other, the statement holds.
+
+Ants on a square - 
+Area of square = 1. Area of circle ~ 0.06. Divide the sqaure into 25 smaller areas. At least one of the areas must have 3 ants. It will fit one area.
+

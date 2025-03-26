@@ -177,3 +177,101 @@ Reboot is useful because the software is reverted to a known state.
 There are user and kernel registers for a given process. During register saves/restores and interrupt, user registers are implicitly saved by hardware using the kernel stack. When OS switches from one process to another, the kernel registers are saved by OS (into memory in the process structure of the process). Kernel stacks are temporary and only valid while the process is currently running.
 
 OS could disable interrupts during interrupt processing. Locking mechanisms to protect interal data structures.
+
+7 - Scheduling
+Workload - processes running in the system
+Processes are sometimes called jobs.
+Turnaround time - the time at which the job completes - the time at which the job arrived in the system.
+
+FCFS: simple.
+Can lead to convoy effect (a # of short consumers of a resource get queued behind a large consumer).
+
+SJF - Shortest Job First. Not preemptive so if a long job arrives first, it will still go before shorter jobs and increase turnaround time.
+
+STCF - Shortest Time-to-Completion First. Preemptive.
+
+New metric - response time.
+Response time = time from when the job arrives in a system to the first time its scheduled.
+
+RR - Round Robin. Runs job for a time slice and then switches to the next job in the run queue. Can't keep the time slice too small because context switching is expensive. So there's a tradeoff with getting better response time and context switching with lower time slices. RR is bad for turnaround time but good for response time.
+
+Good for turnaround time: SJF, STCF
+Good for response time: RR
+
+During I/O, process another job to avoid wasting CPU time.
+
+8 - Multi-Level Feedback Queue (MLFQ)
+1. Optimizes turnaround time
+2. Minimize response time
+
+MLFQ has multiple distinct queues that all have a different priority level. MLFQ uses priorities to decide which job should run at a given time. Job on a higher queue will be chosen to run. Jobs on the same queue have the same priority. Those will have round robin scheduling.
+
+MLFQ varies priority based on observed behavior. If a job relinquishes the CPU while waiting for input from the keyboard, MLFQ would keep the priority high, as this is how a interactive process would behave. If a job uses the CPU for long periods of time, it will have lower priority.
+
+Allotment - amount of time a job can spend at a given priority level before the scheduler reduces its priority.
+
+If a job is short, it will finish quickly. If not, it will move down queues to lower priority.
+
+If a job does a lot of I/O, we don't penalize it because it voluntary gives up CPU time.
+
+Starvation - long running jobs can starve behind short, interactive jobs
+Gaming the scheduler - relinquish CPU, remaining in the same queue strategically.
+
+Priority boost - periodically boost the priority of all jobs in the system.
+
+Every s seconds, all jobs are moved to the topmost (highest priority) queue.
+
+To prevent gaming, the scheduler can keep track of the the allotment for each process instead of forgetting it. After the allotment is used, the process is demoted to the next priority queue.
+
+Higher priority queues are usually given shorter time slices since they are usually composed of interactive jobs. Lower priority queues get longer time slices. This is because they are more CPU intensive.
+
+General MLFQ Rules:
+1. If Priority(A) > P(B), A runs
+2. If P(B) = P(A), Round robin A and Batch
+3. Jobs enter system at highest priority queue
+4. Once job uses up allotment at a given level its moved down one queue
+5. After some time period s, move all jobs in the system to the topmost queue. (Priority evaluation, prevent starvation, adapt if jobs now have more I/O, prevent overloading lower priority queues).
+
+9 - Scheduling Proportional shared
+
+Proportional share scheduler (fair time scheduler) - instead of optimizing for response time or turnaround time, a scheduler might instead try to guarantee each job gets a certain percentage of CPU time.
+
+Lottery scheduling - every now and then, a lottery is conducted to determine which process runs next. Processes that should run more often have a higher chance of winning the lottery.
+
+Tickets - used to represent share of a resource
+
+Randomness is good - lightweight, fast, and avoids worst case scenarios.
+
+Ticket currency - lets a user with a set of tickets to allocate tickets among their own jobs in whatever currency. The system converts the currency into global value.
+
+Ticket transfer - processes can hand of tickets to another process.
+
+linked-list like data structure used to find the lottery winner. Keep track of a counter and traverse the list to find a winner.
+
+Fairness metric - time the first job completes divided by the time the second job completes.
+Fairness increases with job length.
+
+Stride Scheduling: // stride value calculation?
+Divide some large number by the number of tickets each process was assigned. This is the stride value. Every time a process runs, we will increment a counter (pass value) for it by its stride to track global progress.
+Every iteration we choose the client with the min pass value.
+
+Advantage of lottery scheduling over stride scheduling: no global state. If a new job enters a stride scheduler with pass 0, it will monopolize the CPU.
+
+Linux Completely Fair Scheduler (CFS) - 
+little time spent making scheduling decisions. Goal is to fairly divide a CPU evenly among all competing processes.
+
+Virtual runtime - vruntime - as each process runs, it accumulates vruntime. Each processes vrtuntime increases at same rate. CFS picks process with lowest vruntime.
+
+sched_latency - how long a process should run before considering a switch (dynamic time slice). Typically 48 ms. Divide sched latency by number of processes to determine time slice.
+
+min_granularity - usually 6ms. CFS never sets time slice below this value, ensuring time slices aren't too short and overhead is minimized.
+
+CFS has a periodic timer interrupt (every 1 ms) to determine if process reached end of its time slice. It approximates for non-perfect multiples.
+
+nice parameter (-20 to 19, default = 0) - positive = lower priority and negative = higher priority. Users and admins can adjust nice values to give processes a higher or lower share of the CPU.
+
+The nice value of each process mapped to a weight. Weights let us compute the time slice of each process. Accounting for priority differences.
+
+Red-black tree - balanced tree. Holds runnable processes. If process requests I/O and sleeps, it is removed from the tree. Lets us search, insert, and delete at O(log n) time.
+
+If a job sleeps for a while CFS sets the vruntime of that job to the min value in the tree to prevent monopolization.

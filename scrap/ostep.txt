@@ -232,7 +232,7 @@ General MLFQ Rules:
 4. Once job uses up allotment at a given level its moved down one queue
 5. After some time period s, move all jobs in the system to the topmost queue. (Priority evaluation, prevent starvation, adapt if jobs now have more I/O, prevent overloading lower priority queues).
 
-9 - Scheduling Proportional shared
+9 - Scheduling Proportional
 
 Proportional share scheduler (fair time scheduler) - instead of optimizing for response time or turnaround time, a scheduler might instead try to guarantee each job gets a certain percentage of CPU time.
 
@@ -275,3 +275,58 @@ The nice value of each process mapped to a weight. Weights let us compute the ti
 Red-black tree - balanced tree. Holds runnable processes. If process requests I/O and sleeps, it is removed from the tree. Lets us search, insert, and delete at O(log n) time.
 
 If a job sleeps for a while CFS sets the vruntime of that job to the min value in the tree to prevent monopolization.
+
+10 - Multiprocessor Scheduling (Advanced)
+
+multicore processor - multiple CPU cores are packed on a single chip.
+
+Difference between single and multi CPU hardware is with the caches.
+
+temporal locality - when data is accessed, its likely to be accessed in the near future. Think variables or instructions in loops. 
+Spatial locality - if program accesses data at location x, its likely to access data in neighboring addresses. Array or consecutive instructions.
+
+Cache coherence - caches for different CPUs aren't consistent.
+
+Bus snooping - each cache pays attention to memory updates by observing the bus that connect them to main memory. If a CPU sees an update for a data item in its cache, it will invalidate its copy or update it.
+
+Sometimes caches start to build a state when a process is run on it. Therefore, this process would perform better when it runs on the CPU it ran on before rather than a different CPU. This is called cache affinity.
+
+SQMS - Single Queue Multiprocessor Scheduling - put all jobs that need to be scheduled onto a single queue. Lacks scalability. Locks ensure SQMS code accesses the single queue one at a time. Locks reduce performance. By default don't consider cache affinity. But some mechanism can be applied to consider this.
+
+MQMS - each queue follows a scheduling discipline (ex. RR). When job enters system, its placed on a queue (either random or a heuristic like placing it on the smallest queue). More scalable than SQMS because lock and cache contention (mulitple processors compete for same cache line). Intrinsic cache affinity since jobs stay on the same CPU. 
+Problem - load imbalance. If a job on a CPU finishes, other jobs can monopolize CPU time on that CPU
+
+Migration - moving jobs around to address load imbalance
+
+Work stealing - a queue that is low on jobs will occasionally peek at another queue. If that queue is more full, it will steal jobs from the target to balance the load. Don't look too often (high overhead)
+
+CFS uses multiple queues 
+
+13 - Abstraction: Address Spaces
+
+Address space - abstraction of physical memory. Contains all memory state of the running program. Code, program's stack, heap.
+
+Heap - grows positively. Contains malloc'd data and dynamic data structures.
+Stack - grows negatively. Contains local vars, arguments to routines, return values. More temporary data
+
+Instructions are stored in the first segment of the address space.
+
+Virtual address - address where the virtual address thinks its operating, while the actual physical address will be different.
+
+14 - Interlude: Memory API
+In C program, 2 types of memory.
+Stack memory - managed implicitly
+Heap memory - managed explicitly
+malloc() - requests space for an integer on the heap; the routine returns the address of such integer upon sucess. Pass a size for some room on heap. Single parameter is of type size_t (number of bytes we need).
+We use the sizeof() operator to request the right amount of space. sizeof() is known at compile time
+Use free() to free heap memory not being used. Usually done by a garbage collector in other languages.
+
+segmentation fault - you did something wrong with memory.
+Proper code:
+char *src = "hello;
+char *dst = (char *) malloc(strelen(src) + 1);
+strcpy(dst, src);
+
+buffer overflow - not allocating enough memory. security vulnerability.
+
+Memory leak - forgetting to free memory. Can run out of memory.

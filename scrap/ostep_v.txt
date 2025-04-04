@@ -1,0 +1,529 @@
+Intro:
+
+Virtualization - OS takes a physical resource (processor, memory, or disk) and transforms into a more general, more powerful, easy-to-use version of itself. This is why we sometimes call the OS a virtual machine.
+
+OS provides APIs for users to call. 
+
+OS also known as resource manager because it determine what devices, resources to allocate to different programs/processes.
+
+Resources - CPU, memory, disk
+
+Virtualizing the CPU - turning a single CPU into a seemingly infinite number of CPUs, allowing multiple programs to be run at once.
+
+Process identifier (PID) - unique per running process
+
+Multiple processes running program at the same time and increment value at the same location. However, each process updates the value independently. Here, OS is virtualizing memory. Each process accesses its own private virtual address space (the OS maps onto the physical memory of the machine).
+
+Thread - function running within the same memory space as other functions, with more than one of them active at a time.
+
+Persistence - during a power shutoff or system crash, we want to make sure that the data persists within the system.
+
+Hard drives + SSD (solid-state drives) are common repositories for long-lived info.
+
+File system - Software that manages the disk. Stores any files the user creates.
+
+assert() ensures something is something. If not, program terminates.
+
+fsync() ensures all data written to the file is flushed to the disk. Without it, data could remain in the OS buffer cache and be lost in a system crash. 
+
+Device driver - code in OS that knows how to deal with a specific device.
+
+For performance reasons, most file systems delay writes for a while.
+
+Design goals - provide high performance and minimize oveheads of the OS (additional resources consumed by OS to perform tasks)
+
+History:
+Batch processing - number of jobs set up and then run in the batch by an operator
+
+System call - transfers control into the OS while raising hardware privilege level. User apps run in user mode.
+
+Kernel mode - OS has full access to the hardware of the system. 
+
+Trap - hardware instruction that raises privilege to kernel and OS services the request.
+
+Virtualization
+
+4 - Processes:
+Process - running program.
+One usually wants to run more than one program at a time.
+
+OS creates an illusion by virtualizing the CPU. Running one process, stopping it, running another...
+This is called "time sharing" of the CPU. 
+Each process will run more slowly if CPU must be shared.
+
+Space sharing - resource is divided (in space) among those who wish to use it. Ex. Disk space
+
+Context switch - OS stops running one program and starts running another on a given CPU
+
+Policies - algorithms for making some decision with the OS. Ex. Scheduling policy (uses historical info, workload knowledge, performance metrics)
+
+Machine state - what a program can read or update when it is running.
+Obvious component of machine state is memory.
+Address space - memory that a process can address (read/write to)
+Registers - instructions read or update registers so they are integral to process execution
+Special registers:
+Program counter (instruction pointer or IP) - which instruction of the process will execute next.
+Stack pointer and frame pointer manage the stack for function parameters, local variables, return addresses.
+Programs also access persistent storage devices. I/0 info might include a list of files the process currently has open.
+
+4.2 Process API
+Create - OS must be able to create new processes. Ex. type a command into the shell, the OS is invoked to create a new process to run the program indicated.
+Destroy - Users sometimes have the option to kill processes.
+Wait - wait for a process to stop running.
+Miscellaneous - ex. suspend process and then resume
+Status - how long process has run, what state it is in, etc.
+
+4.3 Process creation
+OS must load code and any static data (ex. initialized variables) into memory, into the address space of the process. Programs initially reside on disk (SSDs) in an executable format. So OS reads the bytes from disk and places them in memory elsewhere.
+
+Early OS loaded the process all at once before running the program. Modern OSes perform the process lazily (loading pieces of code or data only as needed during program execution).
+
+Just remember the OS must do some work to get the important program bits from disk to memory.
+
+Before running the process, OS must allocate memory for the program's run-time stack (or just stack). C programs use the stack for local variables, function parameters, and return addresses. The OS allocates this memory and gives it to the process. It will fill in the parameters to the main function (argc and argv array).
+
+OS might allocate memory for program's heap. In C, heap used for explicitly requested dynamically-allocated data. Ex. malloc(), free(). Heap needed for data structures like linked-lists, hash tables, trees, etc.  Heap is small initially. Over time, OS could get involved and request more memory to the process.
+
+OS does initialization tasks for I/O. IN UNIX systems, each process by default has three open file descriptros for std input, output, and error. They let programs easily read input from terminal and print output to screen. Will cover in persistence.
+
+Now OS can start running the program at entry point main(). Jumps to main() routine, OS transfers control of the CPU to the newly created process and begins execution.
+
+4.4 Process States
+Different states a process can be in:
+Running - process runnning on processor (executing instructions)
+Ready - process is ready be run but OS has not chosen to run it yet
+Blocked - process has performed an operation that makes it not ready to run until some other event takes place. Ex: process initiates I/0 request to a disk, it becomes blocked and some other process can use the processor.
+
+Scheduled - process moved from ready to running
+Opposite = descheduled
+
+4.5 Data structures
+OS maintains data structures to keep track of relevant info. 
+Process lists - keeps track of the state of each process. Should also keep track of blocked processes. When I/O event completes, OS can make sure to wake the correct process and ready it to run it again.
+
+Pieces of info OS tracks about process:
+Register context - holds contents of registers for stopped processes. When process stopped, registers saved to memory location. OS can rerun process by restoring registers. (Context switch)
+
+Other possible states:
+Initial - when process first created
+Final/Zombie - process finished running but not yet cleaned up. This can allow the parent that created the process to examine return code and ensure successful execution. 0 = successful, any other number = otherwise.
+
+When finished the parent can make a final call to wait for the completion of the child and to indicate to the OS that it can clean up relevant data strucutres for the extinct process.
+
+PCB (Process Control Block) - individual structure that stores info about a process.
+
+5 - Interlude: Process API
+Process creation in UNIX systems. UNIX creates a new process with 2 system calls: fork() and exec(). wait() can be used by a process wishing to wait for a process it has created to complete.
+
+fork():
+Used to create a new process. Odd routine
+The process that is create is almost an exact copy of the calling process. So for the OS, looks like 2 copies of the program p1 running, both are about to return from the fork(). The newly created process (child) doesn't start running at main(), it comes to life as if it called fork() itself.
+Child receives return code of 0 while parent receives PID of newly created child.
+
+wait():
+parent waits for a child process to finish what it has been doing.
+wait(NULL) returns the PID of the terminated child.
+
+exec():
+Run a program different from the calling program. fork() runs a copy of the same program. exec() is for different.
+
+Separation of fork() and exec() allows shell code to run after fork() but before call to exec()
+
+Shell is a user program. Assume you type a command. Shell figures out where in the file system the executable is, calls fork() to create a new child process to run the command, calls some variant of exec() to run the command and waits for it to complete by calling wait(). 
+
+Output of a process is connected to an in-kernal pipe (queue) and the input of another process is connected to the same pipe. So output of one process used as input for another.
+
+signal():
+sys call for process to catch signals. Could suspend execute or run particular piece of code, etc.
+
+Users generally have their own processes which only they can control. Root users have elevated privileges over these processes.
+
+6 - Mechanism: Limited Direct execution
+Direct exec protocol:
+OS:
+create entry for process list
+allocate memory for program
+load program into memory
+set up stack with argc/argv
+clear registers
+execute call main()
+Program:
+run main(), execute return from main
+OS:
+Free memory of process
+Remove from process list.
+
+User mode - restricted. Can't issue I/O requests. Contrast = kernel mode
+When user processes want to perform elevated operation, they perform a system call (allow kernel to expose key functionalities to user programs ex. accessing file systems, creating/destroying processes). 
+
+Trap table created at boot time by kernel
+
+Sys call num to specify exact system call. User code places the num in a register or in the stack. OS validates it. This is an extra layer of security.
+
+Return from trap instruction to start process execution
+
+Problem #2 - switching between processes
+When a program does something illegal (divide by zero), it generates a trap to the OS. OS resurps control of the CPU.
+
+Timer interrupt - timer device raises an interrupt every couple millizeconds. current process haltes, interrupt handler runs. OS regains control of CPU. Does what it wants (starts new process if necessary). Timer turned on during boot. Can be turned on/off later. When interrupt occurs, a decent portion of the state of the process should be saved.
+
+Context switch - OS saves few register values for current process (onto kernel stack). Restore few for soon to be running process.
+
+Each process has its own kernel stack.
+Stores function call data, local vars, return addresses, etc.
+
+Reboot is useful because the software is reverted to a known state.
+
+There are user and kernel registers for a given process. During register saves/restores and interrupt, user registers are implicitly saved by hardware using the kernel stack. When OS switches from one process to another, the kernel registers are saved by OS (into memory in the process structure of the process). Kernel stacks are temporary and only valid while the process is currently running.
+
+OS could disable interrupts during interrupt processing. Locking mechanisms to protect interal data structures.
+
+7 - Scheduling
+Workload - processes running in the system
+Processes are sometimes called jobs.
+Turnaround time - the time at which the job completes - the time at which the job arrived in the system.
+
+FCFS: simple.
+Can lead to convoy effect (a # of short consumers of a resource get queued behind a large consumer).
+
+SJF - Shortest Job First. Not preemptive so if a long job arrives first, it will still go before shorter jobs and increase turnaround time.
+
+STCF - Shortest Time-to-Completion First. Preemptive.
+
+New metric - response time.
+Response time = time from when the job arrives in a system to the first time its scheduled.
+
+RR - Round Robin. Runs job for a time slice and then switches to the next job in the run queue. Can't keep the time slice too small because context switching is expensive. So there's a tradeoff with getting better response time and context switching with lower time slices. RR is bad for turnaround time but good for response time.
+
+Good for turnaround time: SJF, STCF
+Good for response time: RR
+
+During I/O, process another job to avoid wasting CPU time.
+
+8 - Multi-Level Feedback Queue (MLFQ)
+1. Optimizes turnaround time
+2. Minimize response time
+
+MLFQ has multiple distinct queues that all have a different priority level. MLFQ uses priorities to decide which job should run at a given time. Job on a higher queue will be chosen to run. Jobs on the same queue have the same priority. Those will have round robin scheduling.
+
+MLFQ varies priority based on observed behavior. If a job relinquishes the CPU while waiting for input from the keyboard, MLFQ would keep the priority high, as this is how a interactive process would behave. If a job uses the CPU for long periods of time, it will have lower priority.
+
+Allotment - amount of time a job can spend at a given priority level before the scheduler reduces its priority.
+
+If a job is short, it will finish quickly. If not, it will move down queues to lower priority.
+
+If a job does a lot of I/O, we don't penalize it because it voluntary gives up CPU time.
+
+Starvation - long running jobs can starve behind short, interactive jobs
+Gaming the scheduler - relinquish CPU, remaining in the same queue strategically.
+
+Priority boost - periodically boost the priority of all jobs in the system.
+
+Every s seconds, all jobs are moved to the topmost (highest priority) queue.
+
+To prevent gaming, the scheduler can keep track of the the allotment for each process instead of forgetting it. After the allotment is used, the process is demoted to the next priority queue.
+
+Higher priority queues are usually given shorter time slices since they are usually composed of interactive jobs. Lower priority queues get longer time slices. This is because they are more CPU intensive.
+
+General MLFQ Rules:
+1. If Priority(A) > P(B), A runs
+2. If P(B) = P(A), Round robin A and Batch
+3. Jobs enter system at highest priority queue
+4. Once job uses up allotment at a given level its moved down one queue
+5. After some time period s, move all jobs in the system to the topmost queue. (Priority evaluation, prevent starvation, adapt if jobs now have more I/O, prevent overloading lower priority queues).
+
+9 - Scheduling Proportional
+
+Proportional share scheduler (fair time scheduler) - instead of optimizing for response time or turnaround time, a scheduler might instead try to guarantee each job gets a certain percentage of CPU time.
+
+Lottery scheduling - every now and then, a lottery is conducted to determine which process runs next. Processes that should run more often have a higher chance of winning the lottery.
+
+Tickets - used to represent share of a resource
+
+Randomness is good - lightweight, fast, and avoids worst case scenarios.
+
+Ticket currency - lets a user with a set of tickets to allocate tickets among their own jobs in whatever currency. The system converts the currency into global value.
+
+Ticket transfer - processes can hand of tickets to another process.
+
+linked-list like data structure used to find the lottery winner. Keep track of a counter and traverse the list to find a winner.
+
+Fairness metric - time the first job completes divided by the time the second job completes.
+Fairness increases with job length.
+
+Stride Scheduling: // stride value calculation?
+Divide some large number by the number of tickets each process was assigned. This is the stride value. Every time a process runs, we will increment a counter (pass value) for it by its stride to track global progress.
+Every iteration we choose the client with the min pass value.
+
+Advantage of lottery scheduling over stride scheduling: no global state. If a new job enters a stride scheduler with pass 0, it will monopolize the CPU.
+
+Linux Completely Fair Scheduler (CFS) - 
+little time spent making scheduling decisions. Goal is to fairly divide a CPU evenly among all competing processes.
+
+Virtual runtime - vruntime - as each process runs, it accumulates vruntime. Each processes vrtuntime increases at same rate. CFS picks process with lowest vruntime.
+
+sched_latency - how long a process should run before considering a switch (dynamic time slice). Typically 48 ms. Divide sched latency by number of processes to determine time slice.
+
+min_granularity - usually 6ms. CFS never sets time slice below this value, ensuring time slices aren't too short and overhead is minimized.
+
+CFS has a periodic timer interrupt (every 1 ms) to determine if process reached end of its time slice. It approximates for non-perfect multiples.
+
+nice parameter (-20 to 19, default = 0) - positive = lower priority and negative = higher priority. Users and admins can adjust nice values to give processes a higher or lower share of the CPU.
+
+The nice value of each process mapped to a weight. Weights let us compute the time slice of each process. Accounting for priority differences.
+
+Red-black tree - balanced tree. Holds runnable processes. If process requests I/O and sleeps, it is removed from the tree. Lets us search, insert, and delete at O(log n) time.
+
+If a job sleeps for a while CFS sets the vruntime of that job to the min value in the tree to prevent monopolization.
+
+10 - Multiprocessor Scheduling (Advanced)
+
+multicore processor - multiple CPU cores are packed on a single chip.
+
+Difference between single and multi CPU hardware is with the caches.
+
+temporal locality - when data is accessed, its likely to be accessed in the near future. Think variables or instructions in loops. 
+Spatial locality - if program accesses data at location x, its likely to access data in neighboring addresses. Array or consecutive instructions.
+
+Cache coherence - caches for different CPUs aren't consistent.
+
+Bus snooping - each cache pays attention to memory updates by observing the bus that connect them to main memory. If a CPU sees an update for a data item in its cache, it will invalidate its copy or update it.
+
+Sometimes caches start to build a state when a process is run on it. Therefore, this process would perform better when it runs on the CPU it ran on before rather than a different CPU. This is called cache affinity.
+
+SQMS - Single Queue Multiprocessor Scheduling - put all jobs that need to be scheduled onto a single queue. Lacks scalability. Locks ensure SQMS code accesses the single queue one at a time. Locks reduce performance. By default don't consider cache affinity. But some mechanism can be applied to consider this.
+
+MQMS - each queue follows a scheduling discipline (ex. RR). When job enters system, its placed on a queue (either random or a heuristic like placing it on the smallest queue). More scalable than SQMS because lock and cache contention (mulitple processors compete for same cache line). Intrinsic cache affinity since jobs stay on the same CPU. 
+Problem - load imbalance. If a job on a CPU finishes, other jobs can monopolize CPU time on that CPU
+
+Migration - moving jobs around to address load imbalance
+
+Work stealing - a queue that is low on jobs will occasionally peek at another queue. If that queue is more full, it will steal jobs from the target to balance the load. Don't look too often (high overhead)
+
+CFS uses multiple queues 
+
+13 - Abstraction: Address Spaces
+
+Address space - abstraction of physical memory. Contains all memory state of the running program. Code, program's stack, heap.
+
+Heap - grows positively. Contains malloc'd data and dynamic data structures.
+Stack - grows negatively. Contains local vars, arguments to routines, return values. More temporary data
+
+Instructions are stored in the first segment of the address space.
+
+Virtual address - address where the virtual address thinks its operating, while the actual physical address will be different.
+
+14 - Interlude: Memory API
+In C program, 2 types of memory.
+Stack memory - managed implicitly
+Heap memory - managed explicitly
+malloc() - requests space for an integer on the heap; the routine returns the address of such integer upon sucess. Pass a size for some room on heap. Single parameter is of type size_t (number of bytes we need).
+We use the sizeof() operator to request the right amount of space. sizeof() is known at compile time
+Use free() to free heap memory not being used. Usually done by a garbage collector in other languages.
+
+segmentation fault - you did something wrong with memory.
+Proper code:
+char *src = "hello;
+char *dst = (char *) malloc(strelen(src) + 1);
+strcpy(dst, src);
+
+buffer overflow - not allocating enough memory. security vulnerability.
+
+Memory leak - forgetting to free memory. Can run out of memory.
+
+15 - Address Translation
+Address translation - hardware transforms each memory access (fetch, load, store), changing the virtual address provided by the instruction to a physical address where the actual data is.
+OS itself manages memory.
+
+Problem with static relocation - no protection (processes can generate bad addresses and illegally acces other processes). One placed, its difficult to later relocate an address space to another location.
+
+Base and bounds / dynamic relocation - 2 hardware registers within each CPU, one base and one bounds/limit register.
+
+OS decides where in physical memory to load the process and sets the base register.
+
+Physical address = virtual address + base register
+Ex of executing instruction: Hardware takes PC value at current instruction and adds it to the base register to get the instruction at the physical address (because the first part of the process' address space is the program code).
+
+Address translation - transforming virtual address to physical address.
+
+Called dynamic relocation because the relocation of address happens at runtime and address spaces can be moved after runtime.
+
+Bounds register - makes sure a mem reference doesn't exceed it. CPU will raise exception in this case or if negative.
+
+Memory management unit (MMU) - part of processor that helps with address transaltion.
+
+A single bit, stored in some kind of processor status word indicates which mode the CPU is currently running in. Each CPU has additional pair of registers for base-limit, part of the MMU.
+
+Special instruction to modify base and limit registers - kernel mode
+
+Free list - data structure for the list of ranges of the physical memory which are not currently in use
+
+CPU generates exceptions when user program tries to access memory illegally -> run exception handler.
+
+During context-switches the OS must save and restore base-limit pairs when switching between processes in a process control block (PCB). 
+
+To move process' address space, OS deschedules process, copies address space from current location to new location, updates the saved base register. Then resumes running.
+
+OS provides exception handlers. If process does something raises an exception, it will likely be terminated.
+
+internal fragementation - space within the address space of a process that is not used.
+
+16 - segmentation
+Instead of base and bounds pair per MMU, there can be one per logical segment (code, stack, heap). So instead of grouping them, we can separate them and put them in different parts of physical memory. In this case, you would have to store 3 base-limit pairs (one for each segment).
+
+Segmentation fault - trying to access memory at an illegal address.
+
+We can use segment registers during translation.
+
+Explicit approach - chop address space into segments based on top few bits of the virtual address.
+Ex: top 2 bits = 00 = code
+01 = heap
+Rest of the bits are offset bits
+physical address = base register + offset
+Downsides: extra bit and space taken away because segments are further divided.
+
+Implicit approach - hardware identifies segment by noticing how the address was formed.
+Ex: address generated from program counter -> Code
+based off stack or base pointer -> stack
+anything else -> heap
+
+Hardware needs to know which way a segment grows (stack grows down in address).
+
+Efficiency - segment sharing. Code sharing is common. Read only allows code to be shared among multiple processes without worry. We use protection bits.
+
+If you want a lot of segments, you should have a segment table.  
+
+Upon context switch, segment registers must be saved and restored.
+
+When heaps need more space than already allocated, system call made to grow the heap.
+
+External fragementation - holes of free space between segments.
+
+Compaction - rearranging memory segments to make room for more. expensive.
+Better solution - free list management algo
+
+One problem - if we have a large heap, that's used sparsely it must still be in memory. If address space is being used and doesnt match how the underlying segmentation supports it, segmentation doesn't work super well.
+
+17 - Free space management
+free lists - manage free space in the heap.
+splitting - free chunk of memory to satisfy request is found and split in two.
+
+Coalescing - When a free chunk of memory is freed, look at the addresses being returned and the nearby chunks of free space. If possible, merge to create larger chunks.
+
+Chunks of memory have a header block store extra info (e.g. pointers to speed up deallocation).
+
+Ideal allocater - fast and minimizes fragmentation. No best approach because its largely input dependent.
+
+Best fit - find smallest chunk at least the size of the request. (O(n)). Cost - performance penalty because you have to look at all free blocks to find best fit.
+
+Worst fit - find largest chunk and return it. This is so we have a large remaining chunks that can still satisfy requests. Cost - full search of free space, high overhead.
+
+First fit - return first block that satisfies requests. Is fast, but pollutes beginning of free list with small objects. This can be slightly improved with coalescing.
+
+Next fit - keep a next pointer to the location where we were last looking. This can help avoid splintering certain regions of the list. Fast because it avoids exhaustive search.
+
+Segregated lists - if an application has >= 1 popular-sized requests that it makes, we keep a separate lists to manage objects of that size.
+Advantages - less fragmentation. allocation and free requests can be services quickly since we don't have to search the whole free list.
+
+slab allocator - divides memory into contiguous blocks called slabs, each contains multiple objects of the same type. This avoids frequent calls to the kernel's page allocator.
+Allocator maintains caches to hold initialized, ready-to-use objects. When an object is freed, its not deallocated right away but kept in the cache for reuse.
+When they run low on memory, they request "slabs" of memory from a general memory allocator. 
+When reference counts of the objects go to zero, the general allocator will reclain them.
+Slab allocators avoid frequent initialization and destruction cycles per object and lower overhead noticeably.
+
+Buddy allocation - basically when requests are serviced, free space is continuosly divided into sizes (power of 2) until a block is found that is big enough to service the request, but the block/2 is too small to service the request. (Note that this can lead to internal fragmentation because all blocks are powers of 2.) 
+When the block is freed ,its buddy block is checked to see if it is free. If so, it is combined. Then you recursively go up a level and check the buddy of that block. You apply this concept recursively.
+
+18 - Paging
+Paging - chopping up memory into fixed size pieces.
+page = fixed size unit of memory.
+page frames = physical memory is an array of fixed-size slots
+Paging improves flexibility (abstraction of address space and paging treats all memory uniformly).
+
+Address space can be divided into multiple pages. 
+Page table - used to keep track of each virtual page in the address space. This helps store address translations for the virtual pages of the address space, letting us know where they are in physical memory.
+
+Page tables are per process (exception = inverted page table). So if we have another process, it would have another page table.
+
+Virtual page number (VPN) and page offset in virtual address.
+
+Top bits select the the page and the offset bits tell us which byte of the page we want to look at.
+
+The VPN is mapped to a physical frame number (PFN) to get the actual page in physical memory.
+
+Since page tables can be quite large, they're often stored in memory, in OS virtual memory, or even on disk.
+
+Page table entry (PTE) - single entry in the page table (can hold PFN)
+
+Page table simplest form - linear page table (array). Indexes the array by the VPN and the page table entry (contains PFN and more) is stored at that index location.
+
+PTE Contents:
+Valid bit - whether a particular translation is valid. ex. all unused space between heap and stack could be invalid. If a process tries to access that memory, it will generate a trap. If the unused pages in the address space are marked invalid, we remove the need to allocate physical frames for those pages. If we mark unused pages as invalid we don't need to give them physical frames and save memory.
+
+Protection bits - page can be read from, written to, or executed from. Accessing a page in a way not allowed by these bits will generate a OS trap.
+
+Present bit - whether page is in physical memory or on disk
+Dirty bit - whether page was modified after it was brought into memory
+reference bit - whether a page has been accessed. can help see which pages are popular and therefore kept in memory. Important during page replacement.
+
+For a single process, the page-table base register contains the physical address of the starting location of the page table. We can use the masked and shifted VPN as an index into the array of PTEs.
+Then you can get the PFN from the specified PTE and combine it with the offset to the get the physical address.
+
+Each instruction fetch generates 2 memory references: one for the page table to find the physical frame where the instruction is. 2nd is when the CPU reads the instruction from the physical address.
+
+19 - TLB
+TLB is part of MMU - hardware cache of popular translations. Improve performance tremendously.
+
+TLB hit = easy
+TLB miss = access page table and find translation. Check valid and protection bits. TLB is then updated with translation. These actions are costly because of the page table memory references.
+
+TLB is closer to the processing core.
+
+TLBs can either be hardware or software managed. For software, upon a TLB miss, hardware raises an exception. Privilege -> kernel. Trap handler uses special instructions lookup the translation from the page table and update the table. Then return from trap and hardware retries the instruction to get a TLB hit.
+
+OS needs to be careful to not end up in infinite TLB miss chain.
+Solution: keep TLB miss handlers in physical memory and not subject to address translation. Reserve some entries in TLB for permanently-valid translations and use those slots for handler code. These wired translations always hit.
+
+Advantage of software-managed approach - flexibility since OS can use any DS for the page table.
+
+Fully associative TLB - any entry can be anywhere.
+TLB entry ex:
+VPN | PFN | other bits
+
+TLB often has a valid bit that indicates whether the entry has a valid translation.
+Protection bits - how page can be accessed. (read & execute, read & write, etc.)
+
+TLBs contain translations only valid for the currently running process. When processes are swapped out. 
+
+We can flush the TLB on context switches. Flush = setting all of the valid bits to 0.
+
+If OS switches processes constantly, you'll get a ton of TLB misses initially. Because of this, some TLBs enable sharing of the TLB across context switches. Hardware systems have an address space identifier field (like PID but less bits.) OS must maintain a privileged ASID register so the OS knows the currently executing process is performing valid translations.
+
+Processes can share a page. Ex. code segments stored in same page. This can reduce internal fragmentation. Nothing wrong with it ig and nothing has to be done.
+
+Different TLB replacement policies. Can do random or LRU. LRU can shit the bed on some cases tho. Take a loop with n + 1 instructions. If the size of the TLB is n, you're cooked and you get a TLB miss on every access.
+
+Aside: wired entries in the TLB are entries that are fixed/always there. For example, the TLB handler code is stored here to prevent an infinite loop misses.
+
+Software Managed TLBs ahve privileged instructions to update the TLB.
+
+20 - Advanced Page tables
+
+Linear page tables can take up a ton of memory, especially if there's one for every process.
+
+Simple solution - Bigger pages. 
+Problem - internal fragmentation. So we're still wasting memory in a lot of cases.
+
+One way to combine paging and segmentation - instead of having a single page table for the entire address space of the process, we can have one per logical segment. 
+Ex: 3 page tables for code, heap, stack
+
+We can have a base and bound register for each segment. Base -> holds physical address of page table. 
+Bound -> indicate end of the page table (# of valid pages)
+
+3 base & bound pairs. One for each segment. Upon context switch, they should be switched out for the newly running process.
+
+To find PTE, combine segment bits (identify segment)  with VPN to get the proper index.
+
+In the hybrid approach, unallocated pages don't take up space in the page table because of the limit placed by the bounds register.
+
+Continue at 20.3

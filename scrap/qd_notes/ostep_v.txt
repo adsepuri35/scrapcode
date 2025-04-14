@@ -526,4 +526,20 @@ To find PTE, combine segment bits (identify segment)  with VPN to get the proper
 
 In the hybrid approach, unallocated pages don't take up space in the page table because of the limit placed by the bounds register.
 
-Continue at 20.3
+Multi-level page tables turn the linear page table into a tree like structure. Many modern systems employ it.
+
+Essentially a 2 level table. Divide the page table itself into page sized units. If all of the pages in that unit are invalid, we don't allocate space for them, and the page collection is unallocated in memory. If any of the page tables are valid, we set the valid bit to 1 in the directory and map the PFN of the page table collection to that PDE.
+
+TLB miss = 2 loads from memory (for 2 level page tables)
+
+For multi-level page tables, the VPN could be broken into a page directory index (to find the PDE where the PTE lies) and the page table index (used to index into the page table if valid)
+
+When you have a large virtual space, have multiple page directory levels can help save space.
+
+Hardware first checks TLB. Hardware only checks the multi level page table on a TLB miss.
+
+Inverted page tables - instead of many page tables (one per process), have a single one that has an entry for each physical page of the system. Entry shows which process is using that page and which virtual page maps to that physical page. A hash table is built to speed up lookups. Essentially, page tables are simply data structures. 
+
+Page tables are large in size, so many are swapped to disk.
+
+21 - Swapping mechanisms

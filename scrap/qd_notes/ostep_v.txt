@@ -556,3 +556,39 @@ Page-fault handler - PTE can store the disk address for a page instead of the ty
 Page-replacement policy - used to pick a page to swap to the disk.
 
 OS typically doesn't want to use all of memory so a background thread runs to free memory and keep the space used within a certain threshold.
+
+22 - Swapping Policies
+Main memory can be viewed as a cache for virtual memory pages in the system. So we want to minimize the number of page faults.
+
+Average memory access time (AMAT):
+AMAT = T_M + (P_(Miss) * T_D)
+T_M = cost of accessing memory
+P_(Miss) = probablity of a miss (0-1)
+T_D = cost of accessing disk
+
+The optimal policy is the one the that replaces the page that will be used furthest in the future. (least # of cache misses).
+
+Cold/compulsory miss - cache miss when a page is first encountered
+
+FIFO - Uses a queue. Easy implementation but not great overall
+
+Belady's Anomaly - when increasing the cache size results in more misses.
+
+Random Replacement Policy also an option
+
+LRU - replaces the page that was least recently used.
+Can use a hashmap and a doubly linked list to implement.
+
+In workloads with no locality (random accesses), LRU, FIFO, and Random perform pretty much the same.
+
+80-20 workload - 80% of references are made to the 20% of "hot pages" while the remaining 20% of references are made to the 80% of "cold pages" remaining. Some locality. LRU performs better here.
+
+Looping-sequential workload - this is the worst case for FIFO and LRU because you can get a miss every time. Random performs better.
+
+Approximating LRU - uses a "use/reference bit". Whenever a page is referenced, the use bit is set. Clock hand/pointer moves from page to page in a circular fashion, unsetting set use bits.
+
+Since writing a page that is dirty is expensive, it can be implemented into the clock algo to improve performance.
+
+Page selection - deciding when to bring a page into memory from disk. Demand paging, clustering, prefetching (spatial locality)
+
+Thrashing - performance degrades because system spends more time handling page faults than executing processes. This could happen if the RAM is too small, too many processes competing for RAM, poor page replacement algo, etc.

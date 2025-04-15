@@ -543,3 +543,16 @@ Inverted page tables - instead of many page tables (one per process), have a sin
 Page tables are large in size, so many are swapped to disk.
 
 21 - Swapping mechanisms
+Address spaces are actually much larger. At the bottom of the memory heirarchy are hard disk drives, and memory is above it.
+
+Swap space - space on disk reserved to move pages back and forth. OS needs to remember the disk address of a given page.
+
+Present bit - helps determine whether a page is present in physical memory. 1 = present, 0 = on disk
+
+Page fault - trying to access a page that is currently on disk.
+
+Page-fault handler - PTE can store the disk address for a page instead of the typical PFN. After I/O the OS will update the page table to mark the page present and update the PFN. When I/O happens, the process is blocked so the OS can run other processes.
+
+Page-replacement policy - used to pick a page to swap to the disk.
+
+OS typically doesn't want to use all of memory so a background thread runs to free memory and keep the space used within a certain threshold.

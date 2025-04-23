@@ -1,0 +1,50 @@
+Part 1:
+
+B ⊆ A : B is a subset of A. Meaning B can equal A.
+B ⊂ A : B is a proper subset of A. B does not equal a
+A ⊇ B : B is a subset of A, or A contains B as a subset
+
+Relation on sets X and Y is a set of ordered pairs (x,y) where x in X and y in Y.
+
+Reflexive relation: for all x in S, (x,x) in R
+Irreflexive relation: for all x in S, (x,x) not in R
+Symmetric relation: for all x in S and for all y in S, if (x,y) in R then (y,x) in R
+Antisymmetric: Opposite of above
+Transitive relation: for all x,y,z in S, if (x,y) in R, and (y,z) in R, then (x,z) in R
+
+Cartesian product of X times Y is the relation consisting of all ordered pairs (x,y).
+
+A relation f from X to Y is a function if each element of X appears in exactly one ordered pair of f. 
+- domain of f is X,
+- codomain of f is Y,
+- range of f is the subset of Y containing the elements of Y that appear in ordered pairs of f,
+
+A function X to Y is injective (1-to-1) is each element of the range appears in exactly one ordered pair
+
+A function is surjective (onto) if the codomain and range are equal
+
+f is bijective if it's one-to-one and onto
+
+Pigeonhole Principle - If you must put n + 1 pigeons into n holes, then you must put 2 pigeons in the same hole.
+
+If you must put kn + 1 pigeons into n holes, then you must put k + 1 pigeons into the same hole.
+
+Remember number of arrangements of letters.
+
+The number of circular permutations of n distinct objects is (n-1)!
+
+Combinatorial proof - counts the same set of objects in 2 different ways, proving the numbers obtained are equal.
+
+|A ∪ B| = |A| + |B| - |A ∩ B|
+
+Remember - Binomial theorem
+Remember - Stars and Bars
+
+Ex:
+Total sum = stars = 5
+Use 2 bars to partition stars into three groups
+Total symbols = 7 symbols
+Choose 2 positions for the bars out of 7 total positions
+
+Formal definition:
+(n + k - 1) choose n = (n + k - 1) choose (k - 1)

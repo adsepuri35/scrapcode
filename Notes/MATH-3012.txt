@@ -48,3 +48,4 @@ Choose 2 positions for the bars out of 7 total positions
 
 Formal definition:
 (n + k - 1) choose n = (n + k - 1) choose (k - 1)
+

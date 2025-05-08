@@ -1,0 +1,62 @@
+27 - Thread API
+
+Creating thread:
+- pointer to structure of type pthread_t
+- function pointer
+
+pthread_join():
+- specify which thread to wait for. 
+- pointer to return value you expect to get back.
+
+int pthread_mutex_lock(pthread_mutex_t * mutex)
+
+Each thread has its own stack, so don't return pointers to locally allocated variables.
+
+28 - Locks
+
+A lock is a variable. It must be declared.
+
+Spin-waiting - wasting time waiting for another thread to release a lock
+
+Review Test and Set and basic spin locks.
+
+Test and set - atomic hardware instruction
+lock = 1 means in use
+lock = 0 means free
+Returns the old value of the lock. Basically if the lock has value 0 (meaning it's free), it'll return 0 and if it is held, it will return 1 until when it is free for a moment when it will return 0 and break out of the loop.
+
+Spin locks aren't super fair by nature. Bad for single CPU (cycles wasted if preempted within critical section) but work better on multiple CPUs.
+
+TestandSet is interchangeable with CompareAndSwap
+
+Ticket lock:
+FetchAndAdd - each thread has a ticket value. This introduces more fairness compared to previous methods.
+
+yield() - thread calls to give up CPU and let another thread run. running -> ready.
+
+yield() can be costly in multiprocessor scenarios because of expensive context switches.
+
+3 states (running, ready, blocked)
+
+Can use a queue to keep track of waiting threads.
+
+Avoid spin locks when possible.  
+
+29 - Lock based data structures
+
+Counters:
+
+Approximate counters - one logical counter represented by numerous local physical counters, 1 per CPU core, and a single global counters.
+
+4 CPUS -> 4 local counters, 1 global. 
+
+Also locks, one for each local counter and 1 for global.
+
+Basically each CPU can update its own counter without contention. Then periodically add the local counter value to the global counter (determined by threshold S).
+
+Bigger threshold = more likely to be less correct in precise counter value. 
+Lower threshold = behaves more like exact counter.
+
+Concurrent Linked Lists
+
+Concurrent Queues - use a dummy node to help separate head and tail operations

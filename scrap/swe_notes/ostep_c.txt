@@ -60,3 +60,17 @@ Lower threshold = behaves more like exact counter.
 Concurrent Linked Lists
 
 Concurrent Queues - use a dummy node to help separate head and tail operations
+
+30 - Condition variables
+
+Threads might want to check a condition before continuing execution.
+
+Condition variable - explicit queue that threads can put themselves on when some state of execution (condition) is not as desired (waiting on execution).
+
+pthread_cond_t c; // c is a condition variable
+wait() - thread wishes to put itself to sleep
+signal() - thread changed something in the program and wants to wake up a sleeping thread
+
+wait takes the mutex as the parameter to release the lock and put the calling thread to sleep (atomically)
+
+covering condition - broadcast to all waiting threads to wake them up. Do this when you don't know what thread to wake up. Threads you don't want to wake up will simply check their conditions that are false and go back to sleep.

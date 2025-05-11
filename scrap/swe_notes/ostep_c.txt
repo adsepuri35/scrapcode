@@ -74,3 +74,21 @@ signal() - thread changed something in the program and wants to wake up a sleepi
 wait takes the mutex as the parameter to release the lock and put the calling thread to sleep (atomically)
 
 covering condition - broadcast to all waiting threads to wake them up. Do this when you don't know what thread to wake up. Threads you don't want to wake up will simply check their conditions that are false and go back to sleep.
+
+31 - Semaphores
+
+Semaphore - object with integer value that we can manipulate with two routines: sem_wait() and sem_post(). The initial value of the semaphore determines its behavior.
+
+sem_wait() - decrement the value of semaphore by 1, wait if value of semaphore s is negative
+sem_post() - increment the value of the semaphore s by one, if >= 1 threads are waiting, wake one
+
+if value of semaphore = negative, abs(value) is the number of waiting threads.
+
+Binary semaphores = locks
+Initial value = 1
+
+Semaphores can be used to order events in a concurrent program. (Parent, child threads)
+
+Reader-Writer Lock: Let's say we have a list. We can do insert or lookup operations. Any number of lookup operations can happen as long as there is no write operation going on. So the thread trying to write has to wait for all the reading threads to finish before continuing execution. (More overhead)
+
+Semaphores can also be used for admissions control to limit the number of threads executing some code at once.

@@ -80,6 +80,60 @@ Question - PML4
 Question - PML?
 
 
+Computer Architecture
+
+Cache misses:
+Compulsory - item was never in Cache
+Capacity - item was in cache but not enough space so it was forced out
+Conflict - item was in cache but was not associative enough so it was forced out
+
+ISA - interface between software and hardware. 
+Main components of ISA: Instruction Set, Registers, Data Types 
+Categories of ISA instructions - Arithmetic/Math, Data Transfer (Load, store), Logical (AND, OR, XOR, etc.)
+
+Associativity - tries to answer which locations of RAM memory (addresses) map to which block frames of the CPU's caches. Associativity balances trade-offs between speed, hit rate, and hardware complexity
+
+Common forms of CPU cache associativity - direct, 2, 4, 8-way
+
+Cache lines are typically 32-128 bytes
+
+Cache affinity - the tendency of a process of thread to build up state and reuse the state in the cache
+
+Compilers often align data by padding non-word aligned types with empty bytes for hardware efficiency purposes. Align makes it less prone to error.
+
+Register-relative addressing = base address + offset
+Base address is stored in a register and offset specidies the distance in bytes from that address. Because of this, programmers can code without knowing exact memory locations.
+
+Steps of Fetch-execute loop - Fetch, decode, execute
+
+Branch instructions most effect the program counter (PC)
+
+Pipelining doesnt reduce execution time of instructions but increases the number of instructions completed per time (throughput).
+
+Single cycle processors waste hardware resourcs because other parts of the processors just sit idle.
+
+
+To Study:
+Sharing is caring.
+L1 Cache Split
+NUMA NUMA NUMA
+TLB Switch
+How much parallelism?
+RAM to Cache Memory Transport
+Tag, you're it.
+How big is it?
+It's massive
+Cache Coherence - MESI?
+Warm and Toasty
+Pipeline Operation Basics
+RISC Pipeline Structure
+Processor Architectural Divisions
+Pipeline Performance Calculation
+Clock Cycle and Pipeline Depth
+Cache Inclusion
+Nosy Cache
+What 'E'?
+
 
 Concurrency: 
 

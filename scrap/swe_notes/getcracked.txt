@@ -41,30 +41,43 @@ Page tables map VPNs to PFNs
 
 So when translating addresses, walking the page tables can be expensive, this is where TLBs come into play.
 
+Inverted page tables - instead of per process, one global table for the whole system. Map PFNs to VPNs and PIDs. Scales with physical memory instead of virtual memory so they are generally more compact. Built on a hash table instead of walk. However, there are no TLB optimizations and its expensive to resolve hash collisions.
+
+Clock replacement algorithm - page replacement strat. Approximates LRU with less overhead. Treats the set of pages in memory as a circular list. Uses a reference bit per page to track usage. Scans pages like a clock hand and gives pages a second chance before eviction.
+
+Zombie thread - thread that completed execution by still occupies system resources because its parent thread or process was not properly cleaned up by calling a synchronization function (pthread_join()).
+
+Compare and swap (CAS) - atomic operation to implement synchronization without locks. Ensure shared variable is only updated if its current value is the expected value, preventing race conditions.
+
+Hand-Over-Hand Locking / Lock Coupling - concurrency strat used in linked list data structures to allow multiple theads to traverse and modify the structure while maintaining thread safety. 
+Locks are acquired one node at a time, instead of locking the whole structure. Thread can hold max 2 locks: curent node and next node locks
+
+/dev/urandom - get random num quickly in Linux, uses internal pool to produce more bits
+/dev/random - higher quality randomness
+
+entropy pool - collection of random bits collected from system events - keyboard timings, mouse moving, etc. Used as a source of randomness for the kernel.
+
+Standard file descriptors:
+0 - stdin
+1 - stdout
+2 - stderr
+
+File descriptors - small integers in the OS that are used to refer to open files and standard I/O streams. When a program starts, its automatically given the 3 standard file descriptors.
+
+Paging Heirarchy:
+Level 1 - Page Table, PT - Point to physical pages
+Level 2 - Page Directory, PD - Points to Page Tables
+Level 3 - Page Directory Pointer Tables, PDPT - Points to Page Directories
+Leve 4 - Page Map Level 4, PML4 - Top level table pointing to PDPTs
+
+Each level uses 9 bits of the virtual address to index into a page table.
+
+In C++, int[] are stack allocated and have a predetermined size.
+std::vector are resizable and automatically handles memory management. They are also heap-allocated.
 
 To study:
-
-Question - Inverted Page Tables
-
-Question - Clock Replacement Algorithm
-
-Question - Thread Resource Cleanup
-
-Question - Hardware Lock Support
-
-Question - Lock Coupling
-
-Question - Fast Random
-
-Question - stderr
-
-Question - Lock It
-
 Question - PML4
-
 Question - PML?
-
-Question - Allocation Decisions
 
 
 

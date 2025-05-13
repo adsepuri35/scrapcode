@@ -1,0 +1,73 @@
+OS:
+2 tradeoffs scheduler has to decide between - response time & turnaround time. 
+turnaround time = amount of time elapsed from submission to completion
+response time = avg time elapsed from submission until first response produced. 
+Schedulers should prioritize response time first.
+
+Primary purpose of OS - virtualize machine's physical hardware. OS makes system easier to use and more efficient.
+
+Time sharing/slicing - illusion that multiple virtual CPUs exist through a running process, stopping it, running another, stopping it..
+
+Standard process states - ready, blocked, running
+
+Process list - kernel data structure that keeps track of active processes. Data structure of PCBs. Can be used for scheduling, signaling, resource tracking, and process termination. 
+
+Interrupting an interrupt - might disable interrupts (not for too long). What the OS doesn't do is abort the current interrupt and handle the new one. This could lead to data corruption or deadlocks.
+
+Nice - (-20 to +19, default = 0) parameter for a process to indicate priority. Negative = higher priority for schedulers and Positive = lower priority for schedulers. Think about it like this: If you're too nice, you don't get much scheduling attention.
+
+Completely Fair Scheduler (CFS) - default process scheduler for Linux. Fair CPU time is distributed based on process weights. CFS doesn't use fixed time slices. It uses a Red-black tree to track process based on virtual runtime. Proportional share based on priority.
+
+vruntime - how much CPU time a process has used.
+
+RB-tree - time ordered and processes are stored by vruntime. The leftmost node has the smallest vruntime and is chosen for execution. So the most CPU-starved task runs first.
+
+RB-tree = self-balancing binary tree (fast storage). Nodes can be either red or black. Root always black. Red nodes can't have red children. For black nodes, every path from a node to its leaves has the same number of black nodes. All null nodes (past leaves) are black. Guarantee the height is O(log n) as opposed to BST.
+
+Why is Compaction so compute intensive?:
+Compaction is rearranging allocated memory blocks to reduce fragmentation. It requires copying live data from one location to another, so if allocations are scattered, theres a ton of overhead and copying power required. Pointers must be updated. Running threads must be stopped so no invalid memory accesses occur. Caches and TLB must be updated.
+
+magic - number/signature to validate a memory chunk. Stored in metadata of free blocks. If magic is overwritten, the allocator knows the chunk was corrupted. It can also help distinguish between allocated vs free blocks.
+
+Allocation cost - computational cost required to reserve memory for variables or structures in a program. Global static variables are not allocated since memory is reserved at complile time. Stack allocated variables have minimual cost (adjusting stack pointer). Dynamically allocated stuff have high cost (heap management, fragmentation, sys calls)
+
+Executable files can be broken down into different sections:
+.text - stores executable code
+.data - initialized data (global/static variables)
+.bss - global/static variables not initialized (only size info stored in executable)
+
+PFN - identify page in RAM
+Page tables map VPNs to PFNs
+
+So when translating addresses, walking the page tables can be expensive, this is where TLBs come into play.
+
+
+To study:
+
+Question - Inverted Page Tables
+
+Question - Clock Replacement Algorithm
+
+Question - Thread Resource Cleanup
+
+Question - Hardware Lock Support
+
+Question - Lock Coupling
+
+Question - Fast Random
+
+Question - stderr
+
+Question - Lock It
+
+Question - PML4
+
+Question - PML?
+
+Question - Allocation Decisions
+
+
+
+Concurrency: 
+
+Question - 2 Types of Parallelism

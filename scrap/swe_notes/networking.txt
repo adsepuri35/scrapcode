@@ -51,6 +51,51 @@ Each byte can be identified with the SEQ number + byte #
 
 So ACK # means its saying that its received everything until that byte number
 
+TCP caches everything sent for duration of "Retransmission Timeout". If no ACK is received, segment is resent.
 
+Initially, TCP sent an ACK after received segment.
+Delayed acknowledgements - send ACK every other segment.
+ACKs are cumulative
+In the event of an odd # of packets sent, ACK will be sent after 500ms of receiving a packet
 
+Window size limits how much unacknowledged data can be sent
 
+Window size is sent in each segment.
+This means the window size can be updated dynamically (Flow control).
+
+TCP is bidirectional - both peers can send data
+Both peers have a SEQ # to track bytes sent
+Both peers have an ACK # to track bytes receieved 
+
+Initial Sequence Numbers (ISN) - randomly chosen by sender.
+Must be shared when connection is established (3-way handshake)
+
+TCP connection starts with 3-way handshake (4 events):
+A -> B - SYN with ISN of XOR
+B -> A - ACK with X + 1 (Happen in same packet)
+B -> A - SYN with ISN of Y (Happen in same packet)
+A -> B - ACK with Y + 1
+
+SYN
+SYN ACK
+ACK
+
+Phantom byte - ACK number increases even when no bytes have been sent (during handshake and closure)
+Phantom bytes help differentiate between ACK messages
+
+ACK flag turned on in every message except for the first message
+
+TCP has 2 options for closing a connection
+Graceful method - FIN flags
+Ungraceful method - RST flags
+
+Graceful method: 4-way closure
+A -> B - I have FINished sending data, last sequence # X
+B -> A - ACK FIN with ACK # X + 1
+B -> A - FIN with last SEQ # Y
+A -> B - ACK receiving FIN with ACK Y + 1
+
+Ungraceful closing: 1-way
+A <-> B - Something went wrong... sending a RESET flag
+
+RST is unacknowledged

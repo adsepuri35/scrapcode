@@ -95,7 +95,50 @@ B -> A - ACK FIN with ACK # X + 1
 B -> A - FIN with last SEQ # Y
 A -> B - ACK receiving FIN with ACK Y + 1
 
+FIN 
+ACK
+FIN
+ACK
+
 Ungraceful closing: 1-way
 A <-> B - Something went wrong... sending a RESET flag
 
 RST is unacknowledged
+
+TCP socket is identified by a 4-tuple of source IP, source port, destination IP, destination port
+
+Checksum - helps detect errors in transmitted TCP segment. 
+The sender computes a 16-bit checksum using the segments contents (header + payload). Puts the checksum in TCP header.
+Receiver performs the same checksum calculation and checks to see if it matches the checksum in the header.
+
+Keepalive - 
+optional mechanism to detect if TCP connection is still active or if the remote host is responsive.
+If data isn't sent for a while, system sends a keepalive probe (empty TCP segment). Receiver must respond with an ACK
+
+AIMD - congestion control algorithm. Dynamically adjusts sending rates
+2 phashes:
+Additive Increase (AI) - gradually increases the transmission rate when network is stable
+Multiplicative decrease (MD) - sharpy reduce rate when congestion detected.
+
+Urgent pointer - sender can indicate "urgent data" in the stream, notifiying receiver to process certain data immediately. Priority data pretty much
+
+SACK - features to improve retransmission by allowing a receiver to selectively acknowledge non-contiguous receieved data blocks. Helps avoid unnecessary retransmissions.
+Reduces the number of packets sender has to resend.
+
+Addressing out of order packets - TCP buffers out of order data until missing segments arrive. 
+
+Fast retransmit - sender can detect and retransmit lost packets without waiting for a timeout.
+
+Ex. if duplicate out of order packets are sent and  duplicate acks are received, the sender retransmits the missing segment.
+
+RTO calculation -
+Measure round-trip time.
+Different algos exits for it and it can be changed dynamically.
+
+WSCALE (Window Scale) - option to allow TCP to support larger receive windows than the standard 16-bit window. Specifies scale factor. Better for higher throughput, more latent systems.
+
+TIME_WAIT - ensures safe closure of connections. After closing a connection, TCP keeps the socket in TIME_WAIT for twice the max segment lifetime (~60 sec). This is so stray packets from old connection expire before ports are reused.
+
+
+To Study:
+TIME_WAIT Purpose

@@ -1,0 +1,56 @@
+Topics:
+The five-layer Internet architecture (Application, Transport, Network, Data Link, Physical)
+TCP/IP protocols
+Web protocols (HTTP/HTTPS)
+Network programming basics (sockets, client-server models)
+Routing and addressing (IP addressing, subnets)
+Congestion control and error handling
+Ethernet and wireless networking basics
+Network security fundamentals
+Key performance concepts (latency, throughput, bandwidth)
+UDP
+DNS
+ARP
+
+
+
+TCP/IP Textbook:
+
+Chapter 1:
+
+WAN = Wide Area Network = Internet is a huge WAN
+
+Packet switching - chunks/packets of digital info comprising of bytes are carried through the network kind of independently.
+Multiplexing - chunks from different sources/senders are mixed together and pulled apart.
+
+When packets are receieved at a packet switch, they're stored in buffer memory or a queue and processed with FCFS.
+
+Datagram - type of packet where all identifying info of the source and destination resides inside the packet instead of packet switches. 
+This allows for connectionless networks.
+
+OSI Model -
+Physical defines methods for moving info across a communication medium (cable or phone line)
+Link - establish connectivity to a neighbor sharing the medium
+Network - Packet format that uses different type of link layer netwroks. Addressing scheme for routing algos. 
+Transport - provides flow of data between sessions Session - sessions(ongoing interactions between apps), connection initiation, checkpointing
+Presentation layer - format conversion
+Application - apps do their own implementations
+
+TCP:
+Sequence (SEQ) numbers - track what is subnets
+Acknowledgement (ACK) numbers - track what is received
+
+SEQ/ACK numbers are a measure of bytes  
+
+SEQ number + number of Bytes
+ACK = SEQ + # bytes
+SEQ = previous ACK + # of bytes
+...
+
+Each byte can be identified with the SEQ number + byte #
+
+So ACK # means its saying that its received everything until that byte number
+
+
+
+

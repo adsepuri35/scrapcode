@@ -137,4 +137,45 @@ What 'E'?
 
 Concurrency: 
 
-Question - 2 Types of Parallelism
+yield() - thread provides a hint for the scheduler to put this thread to sleep and reschedule it for later.
+
+Spurious wake - thread waiting on a condition variable is awakened without the condition it was waiting for being met. Interrupts or other low-level events can cause it to happen unexpectedly.
+
+Race condition - when the outcome depends on the relative timing of operations between threads
+
+join() - blocks the calling thread until the other thread completes execution. It is used for synchronization.
+
+
+To Study:
+2 Types of Parallelism
+How does it mutex?
+Same line, different time.
+Mutex Management with lock_guard
+Thread Ownership Transfer
+Optimal Thread Count
+What's suspect?
+Safe Data Sharing Techniques
+Thread Granularity Control
+Mutex Protection Bypass
+Memory Ordering Guarantees
+Something is wrong.
+Locking Granularity Tradeoffs
+Exception Safety in Concurrent Code
+Lock Free vs Wait Free - PRIORITY
+ABA Problem in Lock-free Code
+Lock-free Memory Management
+What pointer?
+Amdahl's Law Application
+Dynamic Workload Distribution
+Cache Coherence Optimization
+Thread Pool Benefits
+Work Stealing Implementation
+Cross-thread Exception Handling
+Parallel Algorithm Pitfalls
+
+
+
+Networking:
+
+
+To Study:

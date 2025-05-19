@@ -139,6 +139,35 @@ WSCALE (Window Scale) - option to allow TCP to support larger receive windows th
 
 TIME_WAIT - ensures safe closure of connections. After closing a connection, TCP keeps the socket in TIME_WAIT for twice the max segment lifetime (~60 sec). This is so stray packets from old connection expire before ports are reused.
 
+UDP: 
 
-To Study:
-TIME_WAIT Purpose
+Not connection-oriented
+No Confirmation of Delivery
+No Flow Control
+
+UDP is ideal for:
+- apps with small resquests and responses. ex. DNS (2 packets)
+- apps with built-in delivery confirmation
+- apps with live or streamed content (latest / real-time packet > older dropped packet)
+
+DNS:
+
+Domain Name System
+
+DNS resolves domain names to I.P. addresses
+DNS server will look through its databases to map the domain name to IP address
+
+Resolver server - ISP (internet service provider). 
+Computer will look through its cache memory to see if the domain name is there.  If not -> Resolver -> Root server
+
+Root server - 13 sets (top of the DNS heirarchy)
+
+TLD server - Top Level Domain Server. Stores the address info for top level domains (.com, .net, .etc)
+
+Authoritative Name Server - know everything about the domain (including IP address)
+
+DNS caching avoids repeated lookups when accessing a frequently accessed domain
+
+DNS zones - spaces to allow distributed management of DNS namespace. A zone contains the domain records that a specific org/admin has authority over.
+
+DNS namespace is organized as a heirarchal inverted tree with the root at the top. Below are TLDs (.com, .net, etc.). Then 2nd level domains and subdomains. This structure allows for efficient name resolution.

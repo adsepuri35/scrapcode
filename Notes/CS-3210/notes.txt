@@ -1,0 +1,59 @@
+Chapter 0:
+system calls - user processes can request kernel restriced actions that are conducted within kernel space
+
+shell - program to reads commands from user and execute them. user program, not kernel.
+
+xv6 process - user space memory (instructions, data, stack), per-process state. 
+
+time-share process - switch available CPU registers. 
+
+fork (system call) - create new process (child). child has same memory contents as parent process.
+fork calls once, returns twice. the return value is how you tell which process you are in after the fork. parent returns the pid of the child (positive) and the child process returns 0.
+
+exit() - calling process stops executing and releases resources (memory and open files).
+
+wait() - returns pid of an exited child of the current process. if none have exited, waits for one to do so.
+
+exec() - replaces the calling processes' memory with new memory image loaded from file in file system. when exec() succeeds, start executing at the instruction specified in the ELF header. 
+exec takes 2 args: name of file with executable, array of string args.
+file needs to have a specific format - which part of the file holds instructions, which is data, which instruction to start at, etc. xv6 uses ELF format. 
+
+sbrk() - grows the data's memory and returns the new location of memory
+
+Shell's dance - shell can't call exec, because it will replace the shell itself. So shell reads the user input, and calls fork. the parent process is the shell and the child is a copy of the shell. the child calls exec and replaces the child shell's code.
+
+file descriptor - small int of a kernel managed object that a process may read from or write to. 
+
+Process can obtain a file descriptor by opening a file, directory, device, etc. 
+
+The xv6 kernel uses the file descriptor as an index for a per-process table. Process reads from file descriptor 0 (std input) and writes to 1 (std output), error = 2. 
+
+read(fd, buf, n) - <= n bytes read from fd and copied into buf.
+write(fd, buf, n) - writes n bytes from buf to fd. each write picks up where the previous one ended.
+
+close() (system call) - releases file descriptor so it becomes free for reuse.
+
+dup(fd) - duplicate an existing file descriptor, returning a new one that refers to the same objects. both share same offset
+
+pipe - kernel buffer exposed to processes as a pair of file descriptors. 1 for reading, 1 for writing. can write data to one end of the pipe and read from the other end of the pipe.
+
+pipes are better than temporary files becauase of automatic teardown, not as much free space needed, parallel execution of pipeline stages, inter-process communication.
+
+chdir(dirname) - change the current directory
+mkdir(dirname) - create a new directory
+mknod(name, major, minor) - create device file
+fstat() -  retrieve info about an object a file descriptor refers to
+link() - creates another file system name referring to the same inode as an existing file
+unlink() - removes name from file system
+cd - changes the working directory of the shell itself.
+
+Chapter 1:
+3 OS requirements: multiplexing, isolation, interaction
+
+
+
+
+
+
+
+

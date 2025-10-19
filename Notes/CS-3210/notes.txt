@@ -47,8 +47,310 @@ link() - creates another file system name referring to the same inode as an exis
 unlink() - removes name from file system
 cd - changes the working directory of the shell itself.
 
+Appendix A:
+3 PC components: CPU, memory, I/O devices
+
+CPU consults a register called the program counter (PC)
+
+Data stored in registers can be accessed in ~1 CPU cycle
+
+Main memory is physically separate from the processor chip.
+
+x86 processors use L1-L3 caches.
+
+Can r/w from device addresses called I/O ports
+
+memory-mapped I/O - devices have fixed addresses and processor r/w at those addresses.
+
+Appendix B:
+
+x86 PC boots and executes a program called the BIOS.
+BIOS prepares hardware and transfers control to the OS (boot sector).
+
+boot sector contains boot loader (instructions that load the kernel into memory.
+
+Assembly bootstrap:
+First instruction in boot loader is cli. It disables the processor interrupts.
+
+x86 instructions use a logical address
+logical address - segment selector and offset.
+
+segment registers - hold starting address for memory segment. Help CPU calculate the physical address of smthn. (ex. code segment, data segment, stack segment)
+
+real mode - program running in real mode has no memory protection and unrestricted access to all hardware.
+
+Global Descriptor Table - holds segment info. contains offset, region bounds, r/w access, etc.
+
+Upon boot, CPU first fetches the reset vector.
+
+bootblock sets up: x86 state, memory referencing model, switch processor from real mode to protected mode, BIOS features.
+
+Mode transition - load GDT, set one of the registers to 1, jump to force the transition
+
 Chapter 1:
 3 OS requirements: multiplexing, isolation, interaction
+
+With multiple applications accessing hardware, they must be well-behaved. But can't always trust each other. 
+
+Better to abstract resources into services.
+
+Applications interact with file system through open, read, write, close sys calls. Lets OS manage the disk.
+
+Applications fail -> OS should be fine. 
+
+Processor can execute instructions in 2 modes: user and kernel.
+kernel - processor can execute privileged instructions.
+user - if a user mode app tries to execute kernel instruction -> switch to user mode -> clean up app
+
+monolithic kernel - all sys calls and OS run with full hardware privilege. But a mistake is fatal. 
+
+To combat this, engineers execute bulk of OS in user mode (microkernel)
+
+Servers - OS services running as processes
+
+xv6 = monolithic kernel
+
+process - unit of isolation in xv6
+
+Each process has its own private address space
+
+page tables - maps a virtual address to a physical address. one for each process.
+
+System call executes in the kernel mappings of the process' address space.
+
+process kernel state - page table, kernel stack, user stack
+
+Midterm Prep:
+
+Chapter 0:
+
+fork() sys call - creates a new process (child). same memory contents as parent process. 
+fork() = 0 = child
+fork() = x = parent
+
+exit() sys call - calling process stops executing and releases memory and open files
+
+wait() sys call - returns pid of an exited child of the current process. if not exited, waits until one of the children exits.
+
+exec() sys call - replaces calling process memory with a new memory image loaded from a file in the file system. If succeeds, does not return to the calling program, instructions loaded from file start executing at entry point in the ELF header. 2 args - name of file with executable, array of string arguments.
+
+xv6 shell - user inputs command. shell calls fork(), createing a copy of the shell process. parent calls wait while the child runs the command. 
+
+sbrk(n) - grows data memory by n bytes
+
+file descriptor - small int for a kernel managed object that a process can read or write to.
+
+fd 0 = std input
+fd 1 = std output
+fd 2 = std error
+
+read() and write() sys calls can be used to read or write to files.
+
+close() releases file descriptor
+
+fork() and exec() separate to allow for I/O redirection with file descriptors
+
+files will be the same for parent and child processes even after fork.
+
+pipe - kernel buffer for processes to communicate (write to one end, read from the other)
+
+read on a pipe waits for data to be written or all fd referring to the write end to close.
+
+Benefits of pipes vs temp fds: 
+1. pipes automatically clean themselves up
+2. can pass any length stream of data
+3. allow for parallel execution
+4. pipes blocking read and writes are more efficient for IPC
+
+Appendix A:
+
+PC components: CPU, memory, I/O
+
+Fastest storage - register set. 
+
+x86 had 8 32-bit general purpose registers, 8 floating point registers, 4 control segister, 4 debug registers, 6 segment registers
+
+RAM is 10-100x slower than registers but cheaper. There is caching but we can ignore.
+
+I/O - devices have fixed memory addresses and processor communicates with the device by r/w at those addresses. Called memory-mapped I/O.
+
+Appendix B:
+
+BIOS - stored in non-volatile memory (remains even when turned off). Prepares hardware and then transfers control to OS (code loaded from boot sector, the first 512-byte sector of the boot disk). Boot sector contains the boot loader (instructions that load kernel into memory). BIOS loads boot sector at adress 0x7c00 and then jumps there.
+
+Loader loads xv6 kernel from disk into memory and then transfers control to kernel.
+
+Bootloader consists of 2 source files: 
+bootasm.S - 16-bit and 32-bit assembly
+bootmain.c - written in C
+
+Assembly bootstrap: 
+first instruction is cli - disables processor interrupts. interrupts let hardware devices invoke OS functions. The bootloader is running here, not BIOS. 
+
+bootloader does not enable paging hardware, so use physical addresses.
+
+All processes start in real mode for backup compatability with the original Intel processor. Modern OS then switch CPU to Protected mode for advanced features. 
+
+Protected mode enables virtual memory, memory protection, etc, 32-bit addressing (real mode is 20-bit).
+
+bootmain.c - 
+loads kernel into memory at some address 0x100000. Once the kernel is loaded, it jumps there.
+
+Master Boot Record (MBR) - 1st sector of a hard drive and 512 bytes for the bootloader and the layout of the disk. Basically used to bootstrap the OS.
+
+Lecture 2:
+kernel's entry point is kernel/src/asm/entry.S. It sets up the initial stack and page table, then jumps to main. 
+
+main.c does everything the kernel needs to do to start up and start running programs.
+
+Virtual memory - memory chunked to pages. hardware called memory management unit (MMU) translates virtual addresses to physical. Page tables tell the MMU what the mapping is.
+
+vm.c - first kernel pagetable initiated from main.c with kvmalloc. it calls switch kvm which sets up a page table for the kernel. page table provides translations. x86 processors use %cr3 as the page table base pointer. 32-bit OS use 2-level paging while 64-bit use 4-level.
+
+kernel page table is contained within every user process page tablefor faster access.
+
+Lecture 3:
+
+EIP = register for instruction pointer
+EFLAGS = current state of CPU
+
+Real mode segmentation - linear address space for program. Max linear address is 1 MB (2^20 bytes)
+
+linear address - combine segment selctr and offset.
+
+Global Descriptor Table (GDT) - holds segment info. contains region bounds, r/w access, etc.
+
+multiplexing - multiple processes share physical memory
+
+Reset vector - first instruction to execute after a reset
+
+Chapter 1:
+OS 3 requirements: multiplexing, isolation, interactions
+
+Instead of trusting processes to be well-behaved, restrict hardware resources through system calls.
+
+system call interface designed for strong isolation.
+
+2 modes: user and kernel mode
+kernel mode - processor executes privileged instructions (r/w disk)user mode - when it tries to execute a privileged instruction, it gets booted off because it wasn't supposed to.
+
+kernel - software running in kernel space/mode
+
+monolithic kernel - entire OS within kernel and all system calls in kernel mode.
+
+microkernel - bulk of OS executed in user mode.
+
+xv6 = monolithic kernel
+
+Each process has its own address space. Page tables map virtual address to a physical address. 
+
+xv6 has a separate page table for each process.
+
+Processes most important pieces of kernel state: page table, kernel stack, run state.
+
+Copy of kernel code is mapped into the address space of every process so the kernel can directly interact with the user mode process.
+
+Each process has 2 stacks: user and kernel. Why keep them separate? If a process messes up its user stack, the kernel stack can still be used.
+
+Kernel Code located at low physical addresses but KERNBASE (where the kernel believes it is) resides at high virtual addresses. A page table entry maps those virtual addresses to the low physical addresses.
+
+Lecture 4:
+Ring 0 - highest privilege level. Protects %cr3 (paging), %cs (current privilege level), memory r/w, I/O port access, control register access.
+
+Have to sanitize inputs when running sys calls or kernel code.
+
+Lecture 5:
+
+Microkernel is better for complexity but worse for performance because of a lot of context switching for user and kernel space.
+
+xv6 - each userspace program has a corresponding kernel stack
+
+Chapter 2:
+
+x86 page table - 2^20 entries. Each PTE contains a 20 bit physical page number (PPN) and some flags. 
+
+Page - 2^12 = 4096 bytes
+
+4096 byte page directory that contains 1024 PTE-like references to page table pages. Each page table page is an array of 1024 32-bit PTEs.
+
+top 10 bits = page directory entry
+next 10 bits = PTE from the page table page
+
+Flags - present (for page faults), write, read only, user mode accessible?
+
+Chapter 3:
+
+3 main challenges with traps:
+1. processor switches from user to kernel mode
+2. kernel and devices coordinate parallel activities
+3. kernel understand device interfaces
+
+When switching from user to kernel -> system saves register
+
+Send interrupts for system calls and exceptions.
+
+Interrupt stops normal processor loop and starts executing the "interrupt handler" (save registers before).
+
+Interrupt Descriptor Table (IDT) - 256 entries pointing to interrupt handlers. Each has a corresponding privilege level.
+
+Lecture 9:
+
+Each interrupt type is assigned a vector to index the interrupt handler in kernel code.
+
+NMI (Non-Maskable Interrupt) - cannot be ignored (e.g. power failure). In xv6, this means the OS dies
+
+INTR (Maskable Interrupt)
+
+2 kinds of programmable interrupt controller (PIC):
+- Local
+- I/0 (interface with I/O devices)
+
+Local PIC let us handle more interrupts in parallel. Can have different timers per CPU.
+
+I/O PIC let us route different interrupts on different CPUs. xv6 always handle keyboard interrupts on cpu0.
+
+256 interrupt handlers
+
+instruction "int N". N = vector number
+instruction "iret". Returns from interrupt handler, restores saved state.
+
+IDTR register holds pointer to current IDT
+
+Chapter 4:
+
+Locks provide mutual exclusion. 
+
+race condition - memory is accessed concurrently and at least one access is a write. Basically when the outcome depends on timing and doesn't generate the expected output.
+
+critical section - instructions between lock acquire and release
+
+xv6 has 2 types of locks: spin-locks and sleep-locks
+
+spin-locks: locked field = 0 when lock is available.
+
+when acquiring locks, checking if a lock is available and setting it to locked should be an atomic instruction.
+
+Deadlock - to prevent, make sure all code paths acquire locks in the same order
+
+To prevent single processor deadlock for interrupt handlers. Interrupts are disabled.
+
+memory barriers can be used to prevent instruction reordering by the processor or compiler.
+
+sleep-locks - yield the processor during critical sections. Acquire sleep-lock yields the processor when waiting and doesn't disable interrupts. Because of this, they are not used in interrupt handlers
+
+xchg - atomically exchanges contents of 2 operands for spin locks.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

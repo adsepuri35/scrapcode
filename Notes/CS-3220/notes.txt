@@ -1,0 +1,211 @@
+Lecture 1:
+
+Verilog module - module name, interface (port list that specifies direction and bitwidth)
+
+If the type for a port is reg, must show the reg type.
+
+Modules are connected with nets. Ports are attached to nets by either position or name.
+
+Built-in Primitives (gate-level) - not(), and(), xor(), ...
+
+User-Defined Primitives - use truth table, only one output, can also implemnt sequential circuits.
+
+Data Values:
+0 - logic zero/false
+1 - logic one/true
+x - unknown or tri-state bus contention
+z - high impedance, floating
+
+Numeric constants:
+<size_in_bits>'<base_format><value>
+base format: binary (b), decimal (d), hex (h)
+unsigned = default, signed = sb, sd, sh
+
+reg = variable data type, not a hardware registers
+
+vectors - can be net types like wire and variable type like reg
+
+<type> [MSB_index : LSB_index] vector_name
+
+By default, all net/variable types are one bit
+
+User-Defined Primitives - use truth table, only one output, can also implemnt sequential circuits.
+
+Data Values:
+0 - logic zero/false
+1 - logic one/true
+x - unknown or tri-state bus contention
+z - high impedance, floating
+
+Numeric constants:
+<size_in_bits>'<base_format><value>
+base format: binary (b), decimal (d), hex (h)
+unsigned = default, signed = sb, sd, sh
+
+reg = variable data type, not a hardware registers
+
+vectors - can be net types like wire and variable type like reg
+
+<type> [MSB_index : LSB_index] vector_name
+
+By default, all net/variable types are one bit.
+
+Lecture 2:
+ISA - interface between hardware and the software. specifies what the processor can do. Tells the processor how to do it.
+What software assumes, hardware promises.
+Microarchitecture - specific implementation of ISA, not visible to software.
+
+ISA contains:
+Instructions (opcodes, data types, registers, condition codes)
+Memory (address space, virtual memory management)
+I/O
+
+Microarchitecture: pipelining, instruction execution order, memory access scheduling, caching (levels, size, associativity). Not visible to software/programmer
+
+CISC (Complex Instruction Set Computer) - complex instructions make complex hardware
+
+RISC (Reduced Instruction Set Computer) - few instructions used the most. Make them really fast. Harder for compiler. External memory only accessible by load/store instruction.
+
+RISC vs. CISC - emphasis on software, instruction same formats, more registers used, compiler complexity, instructions take 1 cycle, easy pipelining
+
+RISC-V: 32 integer registers. load-store architecture. memory holds program & data.
+Sequential instruction processing - Program counter used to fetch current instruction from memory.
+
+Processor instruction groups: load/store, immediates (for constants), computational (arithmetic/logic), jump/branch, others (simd, vectoring) 
+
+4 types of instructions: r-type (3 registers), i-type (2 register and immediates), s/b-type (2 register no destination and immediate), u/j type (1 register (dest) and immediates)
+
+
+Lecture 3:
+Slowest step decides throughput
+
+Latch - holds a value. value available after a new clock
+
+5 Stage RISC Pipeline:
+IF - Instruction Fetch
+ID/RR - Instruction decode & register file read
+EX - Execution/address generation
+MEM - Memory accesses
+WB - Register write back
+
+Pipeline registers - no resource used by > 1 stage
+
+Pipeline hazards:
+Caused by instructions interacting with each other in pipeline. 
+Structural hazard - instruction needs a resource being used by another instruction
+Data hazard - instruction may depend on data produced by earlier instruction
+Control hazard - instruction depends on next instruction's address (branches, exceptions)
+Hazards introduce bubbles
+
+Structual hazards can be avoided by adding more hardware -> RISC pipeline has no structural hazards by design
+
+Data hazards - RAW, WAR, WAW
+
+Strategies for data hazards - 
+Interlock - stall instruction by holding dependent instruction in the decode stage
+Bypass - resolve hazard by bypassing value as soon as available (will still stall)
+
+Control hazards:
+Simple solution - stall on every branch until we have new PC value
+Option 1 - branch comparator moved to decode stage (one nop). But if we also have a data hazard (we get problems). 
+RISC-V Solution: Branch Prediction - guess outcome of branch, fix after if necessary. If wrong (flush all instructions in pipeline)
+
+Lecture 4:
+Goal - throughput with little increase in hardware cost
+
+Types of data dependences:
+flow dependence - read after write (only true dependence)
+output dependence - write after write
+anti dependence - write after read
+
+anti and output dependences exist due to limited number of architectural registers.
+
+How to handle anti and output dependences - write to the destination in only one stage and in program order.
+
+5 ways to handle flow dependences:
+detect and wait - until value available in register file
+detect and forward/bypass data to dependent instruction
+detect and eliminate the dependence at the software level
+predict the needed value(s), execute speculatively
+fine-grained multithreading
+
+How to implement stalling?
+Disable PC and IR latching, ensure stalled instruction stays in its stage. Insert invalid instructions (nops) into the stage
+
+Must stall I_B in ID when ID wants to read a register to be written by I_A.
+
+Data forwarding - forward value to dependent instruction when available
+
+What should the fetch PC be in the next cycle?
+Address of the next instruction
+
+Control Dependences Handling - 
+Stall the pipeline until we know the fetch address
+Guess the next fetch address (branch prediction)
+Employ delayed branching
+Fine grained multithreading
+
+Rather than waiting for PC to resolve, just guess nextPC = PC + 4 to fetch every cycle.
+
+Always predict the next sequential instruction is the next instruction to be executed. 
+
+Lecture 5:
+Control Dependence - fetch PC in the next cycle
+
+nextPC = PC + 4
+Correct guess => no penalty
+Incorrect guess => 2 bubbles
+
+Branch Target Buffer (BTB): giant table indexed by PC, returns the "guess" for nextPC
+When seeing a PC first time, after decoding, record in BTB:
+PC + 4, PC + offset (if branch or jump), ?? (if jump indirect)
+Will better guess how often branches are taken
+
+Corollary: program with strong temporal and spatial locality access only a compact "working set" at any point. This lets know how big BTB should be.
+
+Spatial locality - index with some N middle bits.
+Store 2^N entries in the BTB.
+"Hash" PC into the BTB table
+
+If we have a tag to tell control flow instructions from non-control flow, we can save around 80% storage.
+
+Lecture 6:
+Branch prediction requires 3 things to be predicted at fetch:
+- whether the fetched instruction is a branch. BTB with tagged bits
+- conditional branch direction
+- branch target address (if taken). can be accomplished using a BTB
+
+Compile time prediction (static):
+Ex. always taken/not taken. Profile/program/programmer based
+
+Run time (dynamic):
+Ex. Last time prediction (1 bit), Counter-based (2 bits), advanced algos.
+
+Dynamic Branch Prediction:
+Advantages - predictions are history-based. Adapt to dynamic changes in branch behavior. No static profiling.
+Disadvantages - more complex (additional hardware)
+
+Last time predictor (1-bit per entry): Could be very high accuracy or worst case 0% accuracy. 
+
+Counter Based Prediction (2-bits): Doesn't change direction too quickly. Like a state machine. Worst case 50% accuracy.
+
+2-level Prediction: A branch's outcome can be correlated with other branches' outcomes. A branch's outcome can be correlated with past outcomes of the same branch (other than the outcome of the branch "last-time" it was executed.
+
+How to track global branch correlation - predict based on the outcome of the branch the last time the global branch history was encountered.
+Global History Register (GHR) - keeps track of the global T/NT history of all branches in a register
+Use GHR to index into a table that recorded the outcome that was seen for each GHR value recently - Pattern History Table
+
+GHR - bits aren't per instruction, tracks the outcomes of the last N branches executed anywhere in the program. 
+
+GHR's N bits are used to index a table of 2-bit counters in the PHT with 2^N entries for every branch combination.
+
+Idea: add context by taking which branch is being predicted. GHR is hashed with the Branch PC. Better utilization of counter array but increased access latency. Called Gshare.
+
+Local Branch Correlation:
+Have a per-branch history register. Make a prediction based on the outcome of the branch the last time the same local branch history occurred.
+Level 1 - set of local history registers, N bits each. select the history register based on branch PC. 
+Level 2 - table of counters for historical entry, direction the branch took the last time same history was seen.
+
+BTB - cache of target address indexed by PC
+
+Hybrid Branch Predictors - longer access latency but overall better accuracy and reduced warmup time (faster method used first)
